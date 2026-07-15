@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBM 선교운동 연합회 | Global BAM Movement</title>
+<meta name="description" content="세계 비즈니스 선교운동 연합회 (Global BAM Movement) — Business as Mission. One Calling. Global Impact. 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.">
+<meta property="og:title" content="GBM 선교운동 연합회 | Global BAM Movement">
+<meta property="og:description" content="Business as Mission. One Calling. Global Impact.">
+<meta property="og:image" content="images/logo.png">
+<link rel="icon" type="image/png" href="images/logo.png">
+<!-- Only external resource: Pretendard font CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+/* ============================================================
+   GBM 선교운동 연합회 — Global BAM Movement
+   Single-file SPA · GitHub Pages
+   ------------------------------------------------------------
+   CSS INDEX
+   01. CSS Variables (theme)
+   02. Reset / Base
+   03. Layout helpers (container, section, grid)
+   04. Header / Navigation / Mobile drawer
+   05. Buttons
+   06. Hero (Home)
+   07. Wave dividers
+   08. Cards & common components
+   09. Page hero (sub pages)
+   10. About (greeting, floors, org chart, timeline, harmony)
+   11. Ministries
+   12. News
+   13. Gallery & Lightbox
+   14. Location
+   15. Contact
+   16. Donate
+   17. Footer
+   18. Back-to-top / Reveal animations / Loading
+   19. Responsive
+   ============================================================ */
+
+/* ---------- 01. CSS Variables ---------- */
+:root{
+  /* warm pastel palette */
+  --gold:        #E8D5A3;
+  --beige:       #F5EFE0;
+  --blue-pastel: #A8C8E8;
+  --sage:        #B8D4C8;
+  /* accents derived from GBM logo (softened) */
+  --blue:        #4A90C4;
+  --blue-deep:   #3C7BAB;
+  --gold-deep:   #D4A843;
+  --green:       #7AB648;
+  /* soft tints */
+  --gold-soft:   #FAF3E1;
+  --blue-soft:   #EAF2FA;
+  --sage-soft:   #EDF5F0;
+  /* neutrals */
+  --bg:          #FBF8F0;
+  --surface:     #FFFFFF;
+  --ink:         #3B372F;
+  --ink-strong:  #2E2A23;
+  --muted:       #877E70;
+  --line:        #EAE2D2;
+  /* effects */
+  --shadow:      0 10px 30px rgba(120,100,60,.10);
+  --shadow-lift: 0 18px 44px rgba(120,100,60,.18);
+  --radius:      20px;
+  --header-h:    76px;
+}
+
+/* ---------- 02. Reset / Base ---------- */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  word-break:keep-all;
+  opacity:0;
+  transition:opacity .6s ease;      /* page loading fade-in */
+}
+body.loaded{opacity:1}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+ul{list-style:none}
+h1,h2,h3,h4{color:var(--ink-strong);line-height:1.35;letter-spacing:-.02em}
+:focus-visible{outline:3px solid var(--blue-pastel);outline-offset:2px;border-radius:4px}
+
+/* ---------- 03. Layout helpers ---------- */
+.container{max-width:1100px;margin:0 auto;padding:0 1.4rem}
+.section{padding:clamp(3.5rem,8vw,5.5rem) 0}
+.section-tint-gold{background:var(--gold-soft)}
+.section-tint-blue{background:var(--blue-soft)}
+.section-tint-sage{background:var(--sage-soft)}
+.section-head{text-align:center;max-width:680px;margin:0 auto clamp(2rem,5vw,3.2rem)}
+.eyebrow{
+  display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.22em;
+  color:var(--gold-deep);text-transform:uppercase;margin-bottom:.7rem;
+}
+.section-head h2{font-size:clamp(1.55rem,3.4vw,2.15rem);margin-bottom:.8rem}
+.section-head h2::after{
+  content:"";display:block;width:52px;height:4px;border-radius:99px;
+  background:linear-gradient(90deg,var(--gold-deep),var(--blue-pastel));
+  margin:.9rem auto 0;
+}
+.section-head p{color:var(--muted)}
+.grid{display:grid;gap:1.4rem}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.center{text-align:center}
+.mt-2{margin-top:2rem}
+
+/* pages: SPA hash routing shows one at a time */
+.page{display:none}
+.page.active{display:block;animation:pageIn .5s ease both}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ---------- 04. Header / Navigation ---------- */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  border-bottom:1px solid transparent;
+  transition:box-shadow .3s,border-color .3s;
+}
+/* frosted glass on ::before — backdrop-filter on the header itself would make it
+   the containing block for the fixed-position mobile drawer inside it */
+.site-header::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:rgba(251,248,240,.88);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.header-actions{position:relative;z-index:101} /* keep hamburger above the open drawer */
+.header-inner{
+  max-width:1200px;margin:0 auto;padding:0 1.4rem;
+  height:var(--header-h);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  transition:height .3s ease;
+}
+/* sticky header shrinks slightly with subtle shadow */
+.site-header.scrolled{border-color:var(--line);box-shadow:0 6px 24px rgba(120,100,60,.10)}
+.site-header.scrolled .header-inner{height:60px}
+.brand{display:flex;align-items:center;gap:.7rem;min-width:0}
+.brand img{width:44px;height:44px;object-fit:contain;transition:width .3s,height .3s}
+.site-header.scrolled .brand img{width:36px;height:36px}
+.brand-text{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.brand-text strong{font-size:1.02rem;color:var(--ink-strong);white-space:nowrap}
+.brand-text small{font-size:.68rem;color:var(--muted);letter-spacing:.06em;white-space:nowrap}
+.main-nav{display:flex;align-items:center;gap:.2rem}
+.main-nav a{
+  padding:.55rem .78rem;border-radius:10px;font-size:.94rem;font-weight:600;
+  color:var(--ink);transition:background .25s,color .25s;white-space:nowrap;
+}
+.main-nav a:hover{background:var(--gold-soft);color:var(--gold-deep)}
+.main-nav a.active{color:var(--blue-deep);background:var(--blue-soft)}
+.header-actions{display:flex;align-items:center;gap:.6rem}
+.lang-btn{
+  border:1.5px solid var(--line);border-radius:999px;padding:.42rem .95rem;
+  font-size:.85rem;font-weight:700;background:var(--surface);
+  transition:border-color .25s,box-shadow .25s;white-space:nowrap;
+}
+.lang-btn:hover{border-color:var(--gold-deep);box-shadow:var(--shadow)}
+/* hamburger */
+.menu-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:10px;border-radius:12px}
+.menu-btn span{display:block;height:2.5px;border-radius:2px;background:var(--ink-strong);transition:transform .3s,opacity .3s}
+body.drawer-open .menu-btn span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+body.drawer-open .menu-btn span:nth-child(2){opacity:0}
+body.drawer-open .menu-btn span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.drawer-backdrop{
+  position:fixed;inset:0;background:rgba(46,42,35,.4);z-index:98;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
+
+/* ---------- 05. Buttons ---------- */
+.btn{
+  display:inline-block;padding:.95rem 2.1rem;border-radius:999px;
+  font-weight:700;font-size:.98rem;letter-spacing:.01em;
+  transition:transform .25s,box-shadow .25s;box-shadow:var(--shadow);
+}
+.btn:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift)}
+.btn-primary{background:linear-gradient(135deg,var(--blue),#6FA8D6);color:#fff}
+.btn-gold{background:linear-gradient(135deg,var(--gold-deep),#E5C36A);color:#fff}
+.btn-outline{border:1.5px solid var(--gold-deep);color:var(--gold-deep);background:var(--surface)}
+.btn-sm{padding:.6rem 1.4rem;font-size:.88rem}
+
+/* ---------- 06. Hero (Home) ---------- */
+.hero{
+  position:relative;min-height:100vh;min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:calc(var(--header-h) + 2rem) 1.4rem 7rem;
+  background:linear-gradient(155deg,#FDF8EC 0%,var(--beige) 34%,#EAF2F9 68%,#E9F2EC 100%);
+  overflow:hidden;
+}
+.hero::before,.hero::after{
+  content:"";position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;z-index:0;
+}
+.hero::before{width:420px;height:420px;background:var(--gold);top:-120px;left:-120px}
+.hero::after{width:480px;height:480px;background:var(--blue-pastel);bottom:-140px;right:-140px}
+.hero>*{position:relative;z-index:1}
+.hero-logo{width:230px;max-width:72vw;height:auto;margin-bottom:1.6rem;animation:heroFloat 6s ease-in-out infinite}
+@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-tagline{font-size:clamp(1.5rem,4.2vw,2.5rem);font-weight:800;max-width:820px}
+.hero-tagline-sub{margin-top:.7rem;font-size:clamp(.95rem,2vw,1.15rem);color:var(--muted);font-weight:500;letter-spacing:.02em}
+.hero-verse{margin:2.2rem auto 0;max-width:640px}
+.hero-verse p{
+  font-size:clamp(1rem,2.2vw,1.18rem);font-style:italic;color:var(--blue-deep);
+  font-weight:600;
+}
+.hero-verse cite{display:block;margin-top:.5rem;font-size:.86rem;color:var(--muted);font-style:normal;letter-spacing:.04em}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.4rem}
+/* hero entrance */
+.hero .hero-logo,.hero .hero-tagline,.hero .hero-tagline-sub,.hero .hero-verse,.hero .hero-cta{
+  animation-name:heroUp;animation-duration:.9s;animation-fill-mode:both;animation-timing-function:cubic-bezier(.22,.8,.35,1);
+}
+.hero .hero-logo{animation-name:heroUp,heroFloat;animation-duration:.9s,6s;animation-delay:0s,1s;animation-iteration-count:1,infinite;animation-fill-mode:both,none;animation-timing-function:cubic-bezier(.22,.8,.35,1),ease-in-out}
+.hero .hero-tagline{animation-delay:.15s}
+.hero .hero-tagline-sub{animation-delay:.28s}
+.hero .hero-verse{animation-delay:.42s}
+.hero .hero-cta{animation-delay:.55s}
+@keyframes heroUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- 07. Wave dividers ---------- */
+.wave{display:block;width:100%;height:70px;margin-bottom:-1px}
+.wave svg{display:block;width:100%;height:100%}
+.hero-wave{position:absolute;left:0;right:0;bottom:-1px;z-index:1}
+.hero-wave svg{display:block;width:100%;height:72px}
+
+/* ---------- 08. Cards & common components ---------- */
+.card{
+  background:var(--surface);border-radius:var(--radius);padding:1.9rem 1.6rem;
+  box-shadow:var(--shadow);border:1px solid rgba(234,226,210,.6);
+  transition:transform .3s ease,box-shadow .3s ease;
+}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift)}
+.card h3{font-size:1.08rem;margin:.9rem 0 .55rem}
+.card p{font-size:.93rem;color:var(--muted)}
+.card-icon{
+  width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:1.7rem;
+}
+.icon-gold{background:var(--gold-soft)}
+.icon-blue{background:var(--blue-soft)}
+.icon-sage{background:var(--sage-soft)}
+.icon-beige{background:var(--beige)}
+.num-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;font-size:.9rem;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--blue-pastel));flex-shrink:0;
+}
+/* quote banner (harmony / gideon) */
+.quote-banner{
+  background:linear-gradient(135deg,var(--blue-soft),var(--sage-soft));
+  border-radius:calc(var(--radius) + 6px);padding:clamp(2.2rem,5vw,3.4rem);
+  text-align:center;position:relative;overflow:hidden;
+}
+.quote-banner::before{
+  content:"“";position:absolute;top:-.4rem;left:1.4rem;font-size:7rem;font-family:Georgia,serif;
+  color:rgba(74,144,196,.15);line-height:1;
+}
+.quote-banner blockquote{font-size:clamp(1.05rem,2.4vw,1.3rem);font-weight:700;color:var(--ink-strong);max-width:760px;margin:0 auto}
+.quote-banner .quote-sub{margin-top:1rem;color:var(--muted);font-size:.92rem}
+
+/* ---------- 09. Page hero (sub pages) ---------- */
+.page-hero{
+  padding:calc(var(--header-h) + clamp(2.5rem,6vw,4rem)) 1.4rem clamp(2.5rem,6vw,3.5rem);
+  text-align:center;
+  background:linear-gradient(150deg,var(--beige),var(--blue-soft));
+}
+.page-hero h1{font-size:clamp(1.7rem,4vw,2.4rem)}
+.page-hero p{margin-top:.7rem;color:var(--muted);max-width:640px;margin-left:auto;margin-right:auto}
+
+/* ---------- 10. About ---------- */
+/* greeting */
+.greet-wrap{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:2.4rem;align-items:start}
+.greet-photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lift)}
+.greet-photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3}
+.greet-body p{margin-bottom:1rem;color:var(--ink)}
+.greet-sign{margin-top:1.6rem;font-weight:800;color:var(--ink-strong)}
+.greet-sign small{display:block;font-weight:500;color:var(--muted);margin-bottom:.2rem}
+/* Seolleung workplace church — building floors */
+.building{max-width:720px;margin:0 auto;border-radius:calc(var(--radius) + 4px);overflow:hidden;box-shadow:var(--shadow-lift);border:1px solid var(--line)}
+.floor{display:flex;gap:1.3rem;align-items:flex-start;padding:1.5rem 1.7rem;background:var(--surface)}
+.floor + .floor{border-top:1px dashed var(--line)}
+.floor:nth-child(1){background:var(--sage-soft)}
+.floor:nth-child(2){background:var(--blue-soft)}
+.floor:nth-child(3){background:var(--gold-soft)}
+.floor:nth-child(4){background:var(--beige)}
+.floor-badge{
+  flex-shrink:0;width:52px;height:52px;border-radius:14px;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--blue-deep);
+  box-shadow:var(--shadow);font-size:1.05rem;
+}
+.floor h3{font-size:1.02rem;margin-bottom:.25rem}
+.floor p{font-size:.9rem;color:var(--muted)}
+.building-note{max-width:720px;margin:1.2rem auto 0;text-align:center;color:var(--muted);font-size:.92rem}
+/* org chart */
+.org-chart{text-align:center}
+.org-root{
+  display:inline-block;background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;
+  font-weight:800;padding:.85rem 2.4rem;border-radius:14px;box-shadow:var(--shadow);font-size:1.05rem;
+}
+.org-stem{width:2px;height:34px;background:var(--line);margin:0 auto}
+.org-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;text-align:left}
+.org-dept{
+  background:var(--surface);border-radius:16px;border-top:4px solid var(--gold-deep);
+  padding:1.2rem 1.1rem;box-shadow:var(--shadow);
+  transition:transform .3s,box-shadow .3s;
+}
+.org-dept:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+.org-dept:nth-child(2){border-top-color:var(--blue)}
+.org-dept:nth-child(3){border-top-color:var(--green)}
+.org-dept:nth-child(4){border-top-color:var(--blue-pastel)}
+.org-dept:nth-child(5){border-top-color:var(--sage)}
+.org-dept h3{font-size:.98rem;margin-bottom:.6rem}
+.org-dept li{
+  font-size:.85rem;color:var(--muted);padding:.28rem 0 .28rem 1.1rem;position:relative;
+}
+.org-dept li::before{content:"";position:absolute;left:0;top:.85em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+/* timeline */
+.timeline{position:relative;max-width:640px;margin:0 auto;padding-left:2rem}
+.timeline::before{content:"";position:absolute;left:.55rem;top:.4rem;bottom:.4rem;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:0 0 1.9rem 1.2rem}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{
+  content:"";position:absolute;left:-1.45rem;top:.42rem;width:13px;height:13px;border-radius:50%;
+  background:var(--gold-deep);border:3px solid var(--gold-soft);box-shadow:0 0 0 2px var(--gold);
+}
+.tl-item:first-child::before{background:var(--blue);box-shadow:0 0 0 2px var(--blue-pastel);border-color:var(--blue-soft)}
+.tl-date{font-size:.82rem;font-weight:800;color:var(--blue-deep);letter-spacing:.04em}
+.tl-item h3{font-size:1rem;margin:.15rem 0 .2rem}
+.tl-item p{font-size:.88rem;color:var(--muted)}
+
+/* ---------- 11. Ministries ---------- */
+.ministry-card{display:flex;flex-direction:column}
+.ministry-card .card-icon{margin-bottom:.2rem}
+.project-card{border-left:5px solid var(--gold-deep)}
+.project-card:nth-child(2){border-left-color:var(--blue)}
+.project-card:nth-child(3){border-left-color:var(--green)}
+.join-item{display:flex;gap:1.1rem;align-items:flex-start}
+.join-item .card-icon{width:48px;height:48px;font-size:1.4rem;flex-shrink:0}
+.join-item h3{margin:.1rem 0 .3rem;font-size:1rem}
+
+/* ---------- 12. News ---------- */
+.news-controls{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin-bottom:1.8rem}
+.filter-tabs{display:flex;flex-wrap:wrap;gap:.5rem}
+.filter-tabs button{
+  padding:.5rem 1.15rem;border-radius:999px;font-size:.88rem;font-weight:700;
+  background:var(--surface);border:1.5px solid var(--line);color:var(--muted);
+  transition:all .25s;
+}
+.filter-tabs button:hover{border-color:var(--gold-deep);color:var(--gold-deep)}
+.filter-tabs button.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.search-box{position:relative;flex:1;min-width:220px;max-width:320px}
+.search-box input{
+  width:100%;padding:.65rem 1.1rem .65rem 2.6rem;border-radius:999px;
+  border:1.5px solid var(--line);background:var(--surface);font:inherit;font-size:.9rem;color:var(--ink);
+  transition:border-color .25s,box-shadow .25s;
+}
+.search-box input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.search-box::before{
+  content:"🔍";position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:.85rem;opacity:.6;
+}
+.news-tools{display:flex;gap:.6rem;align-items:center;flex:1;min-width:240px;max-width:460px;justify-content:flex-end}
+.sort-btn{
+  flex-shrink:0;display:inline-flex;align-items:center;gap:.35rem;
+  padding:.6rem 1.05rem;border-radius:999px;font-size:.85rem;font-weight:700;
+  background:var(--surface);border:1.5px solid var(--line);color:var(--muted);
+  transition:border-color .25s,color .25s,box-shadow .25s;white-space:nowrap;
+}
+.sort-btn:hover{border-color:var(--blue);color:var(--blue-deep);box-shadow:var(--shadow)}
+.sort-arrow{font-size:.98rem;line-height:1}
+.news-list{display:flex;flex-direction:column;gap:.9rem}
+.news-item{
+  background:var(--surface);border-radius:16px;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .3s;
+}
+.news-item:hover{box-shadow:var(--shadow-lift)}
+.news-item-head{
+  width:100%;display:flex;align-items:center;gap:.9rem;padding:1.15rem 1.4rem;text-align:left;
+}
+.news-badge{
+  flex-shrink:0;font-size:.72rem;font-weight:800;padding:.28rem .75rem;border-radius:999px;letter-spacing:.03em;
+}
+.badge-notice{background:var(--blue-soft);color:var(--blue-deep)}
+.badge-news{background:var(--sage-soft);color:#4E7A44}
+.badge-event{background:var(--gold-soft);color:var(--gold-deep)}
+.news-title{flex:1;font-weight:700;font-size:.98rem;color:var(--ink-strong)}
+.news-date{flex-shrink:0;font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.news-arrow{flex-shrink:0;color:var(--muted);transition:transform .3s;font-size:.8rem}
+.news-item.open .news-arrow{transform:rotate(180deg)}
+.news-body{
+  max-height:0;overflow:hidden;transition:max-height .45s ease,padding .45s ease;
+  padding:0 1.4rem;color:var(--muted);font-size:.92rem;
+}
+.news-item.open .news-body{max-height:400px;padding:0 1.4rem 1.3rem;border-top:1px dashed var(--line);padding-top:1rem}
+.news-empty{text-align:center;color:var(--muted);padding:3rem 0}
+/* home preview */
+.home-news .news-item-head{cursor:pointer}
+
+/* ---------- 13. Gallery & Lightbox ---------- */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.1rem}
+.gallery-item{
+  position:relative;border-radius:16px;overflow:hidden;cursor:zoom-in;
+  box-shadow:var(--shadow);aspect-ratio:4/3;background:var(--beige);
+  transition:transform .3s,box-shadow .3s;border:0;padding:0;
+}
+.gallery-item:hover{transform:translateY(-5px);box-shadow:var(--shadow-lift)}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gallery-item:hover img{transform:scale(1.06)}
+/* lightbox (pure CSS/JS) */
+.lightbox{
+  position:fixed;inset:0;z-index:200;background:rgba(24,21,16,.92);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{max-width:88vw;max-height:78vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb-count{color:rgba(237,230,214,.6);font-size:.78rem;margin-top:1rem;letter-spacing:.1em}
+.lb-btn{
+  position:absolute;color:#fff;font-size:2rem;line-height:1;padding:.8rem;border-radius:50%;
+  transition:background .25s;user-select:none;
+}
+.lb-btn:hover{background:rgba(255,255,255,.14)}
+.lb-close{top:1.2rem;right:1.4rem;font-size:1.7rem}
+.lb-prev{left:1rem;top:50%;transform:translateY(-50%)}
+.lb-next{right:1rem;top:50%;transform:translateY(-50%)}
+
+/* ---------- 14. Location ---------- */
+.map-wrap{
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lift);
+  border:1px solid var(--line);margin-top:2rem;
+}
+.map-wrap iframe{display:block;width:100%;height:420px;border:0}
+.loc-card h3{display:flex;align-items:center;gap:.55rem;font-size:1.05rem;margin-bottom:.6rem}
+.loc-card p{color:var(--muted);font-size:.93rem;margin-bottom:.3rem}
+.loc-card strong{color:var(--ink-strong)}
+.trans-list li{
+  display:flex;gap:.8rem;align-items:flex-start;padding:.55rem 0;font-size:.93rem;color:var(--muted);
+}
+.trans-list .line-badge{
+  flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;
+  min-width:26px;height:26px;border-radius:50%;color:#fff;font-size:.72rem;font-weight:800;padding:0 .3rem;
+}
+.line-2{background:#33A23D}
+.line-bd{background:#F5A200}
+
+/* ---------- 15. Contact ---------- */
+.contact-wrap{display:grid;grid-template-columns:1.4fr 1fr;gap:2rem;align-items:start}
+.contact-form{background:var(--surface);border-radius:var(--radius);padding:2rem 1.8rem;box-shadow:var(--shadow);border:1px solid var(--line)}
+.form-row{margin-bottom:1.15rem}
+.form-row label{display:block;font-size:.86rem;font-weight:700;margin-bottom:.4rem;color:var(--ink-strong)}
+.form-row input,.form-row select,.form-row textarea{
+  width:100%;padding:.75rem 1rem;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--bg);font:inherit;font-size:.93rem;color:var(--ink);
+  transition:border-color .25s,box-shadow .25s;
+}
+.form-row textarea{min-height:150px;resize:vertical}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{
+  outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft);background:var(--surface);
+}
+.form-note{font-size:.8rem;color:var(--muted);margin:-0.3rem 0 1.1rem}
+.contact-info-card .info-line{display:flex;gap:.8rem;align-items:center;padding:.6rem 0;font-size:.94rem}
+.contact-info-card .info-line a:hover{color:var(--blue-deep);text-decoration:underline}
+.sns-row{display:flex;gap:.7rem;margin-top:1rem}
+.sns-row a{
+  width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:var(--gold-soft);font-size:1.25rem;transition:transform .25s,box-shadow .25s;
+}
+.sns-row a:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+
+/* ---------- 16. Donate ---------- */
+.gideon-banner{
+  background:linear-gradient(135deg,#3C7BAB,#4A90C4 55%,#6FA8D6);color:#fff;
+  border-radius:calc(var(--radius) + 6px);padding:clamp(2.4rem,6vw,3.8rem);text-align:center;
+  position:relative;overflow:hidden;box-shadow:var(--shadow-lift);
+}
+.gideon-banner::before{
+  content:"300";position:absolute;right:-1.2rem;bottom:-2.8rem;font-size:11rem;font-weight:900;
+  color:rgba(255,255,255,.08);line-height:1;letter-spacing:-.05em;
+}
+.gideon-banner h3{color:#fff;font-size:clamp(1.25rem,3vw,1.7rem);margin-bottom:1.1rem}
+.gideon-banner blockquote{font-size:clamp(.98rem,2.2vw,1.15rem);max-width:680px;margin:0 auto;font-weight:600;position:relative;z-index:1}
+.gideon-banner .quote-sub{margin-top:.9rem;color:rgba(255,255,255,.75);font-size:.88rem;position:relative;z-index:1}
+.donate-method h3{display:flex;align-items:center;gap:.6rem}
+.use-list li{
+  display:flex;gap:.9rem;align-items:flex-start;padding:.7rem 0;border-bottom:1px dashed var(--line);
+  font-size:.95rem;color:var(--ink);
+}
+.use-list li:last-child{border-bottom:0}
+.use-list .dot{
+  flex-shrink:0;width:10px;height:10px;border-radius:50%;margin-top:.55em;
+  background:linear-gradient(135deg,var(--gold-deep),var(--gold));
+}
+.tbd{
+  display:inline-block;background:var(--gold-soft);color:var(--gold-deep);border:1px dashed var(--gold-deep);
+  font-size:.8rem;font-weight:700;padding:.2rem .7rem;border-radius:8px;
+}
+
+/* ---------- 17. Footer ---------- */
+.site-footer{background:#33302A;color:#CFC8B8;margin-top:0}
+.footer-inner{max-width:1100px;margin:0 auto;padding:3.5rem 1.4rem 2rem;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2.2rem}
+.site-footer h4{color:#F0EADB;font-size:.95rem;margin-bottom:1rem;letter-spacing:.04em}
+.footer-brand{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
+.footer-brand img{width:42px;height:42px;object-fit:contain;background:#fff;border-radius:10px;padding:4px}
+.footer-brand strong{color:#F0EADB;display:block;line-height:1.3}
+.footer-brand small{font-size:.72rem;color:#9C947F}
+.site-footer p,.site-footer li{font-size:.87rem;line-height:1.9}
+.site-footer a:hover{color:#F0EADB;text-decoration:underline}
+.footer-sns{display:flex;gap:.6rem;margin-top:.6rem}
+.footer-sns a{
+  width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:background .25s;
+}
+.footer-sns a:hover{background:rgba(255,255,255,.18);text-decoration:none}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);text-align:center;padding:1.3rem;font-size:.8rem;color:#9C947F}
+.footer-wave svg{display:block;width:100%;height:64px;margin-bottom:-1px}
+
+/* ---------- 18. Back-to-top / Reveal / Loading ---------- */
+.back-top{
+  position:fixed;right:1.4rem;bottom:1.4rem;z-index:90;
+  width:50px;height:50px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold-deep),#E5C36A);color:#fff;font-size:1.15rem;
+  box-shadow:var(--shadow-lift);
+  opacity:0;pointer-events:none;transform:translateY(14px);
+  transition:opacity .3s,transform .3s;
+}
+.back-top.show{opacity:1;pointer-events:auto;transform:none}
+.back-top:hover{transform:translateY(-3px)}
+/* scroll-triggered fade-in (IntersectionObserver) */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-d1{transition-delay:.1s}
+.reveal-d2{transition-delay:.2s}
+.reveal-d3{transition-delay:.3s}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- 19. Responsive ---------- */
+@media (max-width:1023px){
+  .main-nav{
+    position:fixed;top:0;right:0;bottom:0;z-index:99;
+    flex-direction:column;align-items:stretch;gap:.3rem;
+    width:min(300px,82vw);padding:calc(var(--header-h) + 1.2rem) 1.3rem 2rem;
+    background:var(--surface);box-shadow:-10px 0 40px rgba(46,42,35,.15);
+    transform:translateX(100%);transition:transform .35s ease;
+  }
+  body.drawer-open .main-nav{transform:none}
+  .main-nav a{padding:.85rem 1rem;font-size:1rem;border-radius:12px}
+  .menu-btn{display:flex}
+  .brand-text strong{font-size:.94rem}
+}
+@media (max-width:760px){
+  .contact-wrap,.greet-wrap{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr;gap:1.8rem}
+  .brand-text small{display:none}
+  .map-wrap iframe{height:320px}
+  .news-item-head{flex-wrap:wrap;row-gap:.3rem}
+  .news-title{flex-basis:100%;order:3}
+  .lang-btn{padding:.38rem .7rem;font-size:.78rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER · NAVIGATION
+     ============================================================ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#home" class="brand" aria-label="GBM 홈으로">
+      <img src="images/logo2.png" alt="GBM 선교운동 연합회 로고">
+      <span class="brand-text">
+        <strong data-i18n="brand.name">GBM 선교운동 연합회</strong>
+        <small data-i18n="brand.sub">Global BAM Movement</small>
+      </span>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="주 메뉴">
+      <a href="#home"     data-i18n="nav.home">홈</a>
+      <a href="#about"    data-i18n="nav.about">소개·인사말</a>
+      <a href="#ministry" data-i18n="nav.ministry">사역안내</a>
+      <a href="#news"     data-i18n="nav.news">공지·소식</a>
+      <a href="#gallery"  data-i18n="nav.gallery">갤러리</a>
+      <a href="#location" data-i18n="nav.location">오시는 길</a>
+      <a href="#contact"  data-i18n="nav.contact">문의하기</a>
+      <a href="#donate"   data-i18n="nav.donate">후원·헌금</a>
+    </nav>
+    <div class="header-actions">
+      <!-- language toggle (🇰🇷 한국어 / 🇺🇸 English) -->
+      <button id="langBtn" class="lang-btn" aria-label="Switch language">🇺🇸 English</button>
+      <button id="menuBtn" class="menu-btn" aria-label="메뉴 열기" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<main>
+
+<!-- ============================================================
+     TAB 1 · 메인(홈) / HOME  (#home)
+     ============================================================ -->
+<section id="page-home" class="page">
+
+  <!-- full-screen hero: logo + tagline (KR/EN) + key scripture -->
+  <div class="hero">
+    <img class="hero-logo" src="images/logo1.png" alt="GBM 로고">
+    <h1 class="hero-tagline" data-i18n="hero.tagline">비즈니스를 통한 선교.<br>하나의 부르심. 전 세계적 영향력.</h1>
+    <p class="hero-tagline-sub" data-i18n="hero.taglineSub">Business as Mission. One Calling. Global Impact.</p>
+    <blockquote class="hero-verse">
+      <p data-i18n="hero.verse">“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라”</p>
+      <cite data-i18n="hero.verseRef">요한복음 20:31</cite>
+    </blockquote>
+    <div class="hero-cta">
+      <a href="#about"  class="btn btn-primary" data-i18n="hero.ctaAbout">GBM 알아보기</a>
+      <a href="#donate" class="btn btn-gold"    data-i18n="hero.ctaDonate">후원하기</a>
+    </div>
+    <!-- wave divider (hero → content) -->
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 74" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,42 C240,74 480,10 720,26 C960,42 1200,70 1440,34 L1440,74 L0,74 Z" fill="#FBF8F0"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 4 vision cards -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Vision</span>
+        <h2 data-i18n="home.visionTitle">GBM의 비전</h2>
+        <p data-i18n="home.visionDesc">비즈니스와 선교의 통합으로 하나님 나라를 세워가는 네 가지 비전입니다.</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="card reveal">
+          <div class="card-icon icon-gold">🛡️</div>
+          <h3 data-i18n="home.vision1t">기드온 300 후원자</h3>
+          <p data-i18n="home.vision1d">300명의 기드온 후원자를 통한 자립 기반 구축</p>
+        </div>
+        <div class="card reveal reveal-d1">
+          <div class="card-icon icon-blue">⛪</div>
+          <h3 data-i18n="home.vision2t">100개 교회 개척</h3>
+          <p data-i18n="home.vision2d">100개 교회 개척 및 현지 제자 양성</p>
+        </div>
+        <div class="card reveal reveal-d2">
+          <div class="card-icon icon-sage">🌏</div>
+          <h3 data-i18n="home.vision3t">치앙마이 BAM 허브</h3>
+          <p data-i18n="home.vision3d">치앙마이 중심 거점 BAM 허브 구축</p>
+        </div>
+        <div class="card reveal reveal-d3">
+          <div class="card-icon icon-beige">🎓</div>
+          <h3 data-i18n="home.vision4t">훈련과 파송 시스템</h3>
+          <p data-i18n="home.vision4d">BAM 사역자를 위한 훈련과 파송 시스템</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- core ministry areas summary -->
+  <section class="section section-tint-gold">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Ministry</span>
+        <h2 data-i18n="home.minTitle">핵심 사역 분야</h2>
+        <p data-i18n="home.minDesc">GBM이 집중하는 다섯 가지 핵심 사역입니다.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="card-icon icon-blue">💼</div>
+          <h3 data-i18n="home.min1t">킹덤 비즈니스 런칭</h3>
+          <p data-i18n="home.min1d">Kingdom Business Launching</p>
+        </div>
+        <div class="card reveal reveal-d1">
+          <div class="card-icon icon-gold">✈️</div>
+          <h3 data-i18n="home.min2t">선교사 훈련 및 파송</h3>
+          <p data-i18n="home.min2d">Missionary Training &amp; Sending</p>
+        </div>
+        <div class="card reveal reveal-d2">
+          <div class="card-icon icon-sage">🌐</div>
+          <h3 data-i18n="home.min3t">글로벌 네트워크 형성</h3>
+          <p data-i18n="home.min3d">Global BAM Network</p>
+        </div>
+        <div class="card reveal reveal-d1">
+          <div class="card-icon icon-beige">📖</div>
+          <h3 data-i18n="home.min4t">교회 개척 및 제자훈련</h3>
+          <p data-i18n="home.min4d">Church Planting &amp; Discipleship</p>
+        </div>
+        <div class="card reveal reveal-d2">
+          <div class="card-icon icon-gold">🤝</div>
+          <h3 data-i18n="home.min5t">후원 캠페인 운영</h3>
+          <p data-i18n="home.min5d">Support Campaigns</p>
+        </div>
+      </div>
+      <p class="center mt-2 reveal"><a class="btn btn-outline btn-sm" href="#ministry" data-i18n="home.minMore">사역 안내 자세히 보기</a></p>
+    </div>
+  </section>
+
+  <!-- latest news preview -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">News</span>
+        <h2 data-i18n="home.newsTitle">최근 소식</h2>
+      </div>
+      <div class="news-list home-news" id="homeNews"><!-- rendered by JS --></div>
+      <p class="center mt-2 reveal"><a class="btn btn-outline btn-sm" href="#news" data-i18n="home.newsMore">공지·소식 전체 보기</a></p>
+    </div>
+  </section>
+
+  <!-- inaugural assembly photos -->
+  <section class="section section-tint-blue">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">2025. 7. 24</span>
+        <h2 data-i18n="home.photosTitle">GBM 창립총회</h2>
+        <p data-i18n="home.photosDesc">2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회가 첫걸음을 내디뎠습니다.</p>
+      </div>
+      <div class="grid grid-2">
+        <button class="gallery-item reveal" data-lb="0" type="button">
+          <img src="images/photo1.jpg" alt="GBM 창립총회 현수막" loading="lazy">
+        </button>
+        <button class="gallery-item reveal reveal-d1" data-lb="1" type="button">
+          <img src="images/photo2.jpg" alt="GBM 창립총회 단체 사진" loading="lazy">
+        </button>
+      </div>
+      <p class="center mt-2 reveal"><a class="btn btn-outline btn-sm" href="#gallery" data-i18n="home.galleryMore">갤러리 더 보기</a></p>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 2 · 소개·인사말 / ABOUT  (#about)
+     ============================================================ -->
+<section id="page-about" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="about.heroTitle">소개·인사말</h1>
+    <p data-i18n="about.heroSub">세계 비즈니스 선교운동 연합회 — Global BAM Movement</p>
+  </div>
+
+  <!-- vision · mission · core values -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Who We Are</span>
+        <h2 data-i18n="about.introTitle">GBM은 이런 공동체입니다</h2>
+        <p data-i18n="about.introDesc">비즈니스와 선교(BAM)를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.</p>
+      </div>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="card-icon icon-blue">🔭</div>
+          <h3 data-i18n="about.visionCardT">비전</h3>
+          <p data-i18n="about.visionCardD">치앙마이 중심의 BAM 허브와 100개 교회 개척, 300명의 기드온 후원자를 통한 자립 기반 위에 세계 선교의 새로운 길을 엽니다.</p>
+        </div>
+        <div class="card reveal reveal-d1">
+          <div class="card-icon icon-gold">🕊️</div>
+          <h3 data-i18n="about.missionCardT">미션</h3>
+          <p data-i18n="about.missionCardD">비즈니스를 통한 선교(Business as Mission)로 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결합니다.</p>
+        </div>
+        <div class="card reveal reveal-d2">
+          <div class="card-icon icon-sage">💛</div>
+          <h3 data-i18n="about.valuesCardT">핵심 가치</h3>
+          <p data-i18n="about.valuesCardD">하나의 부르심, 자립, 그리고 연합 — 교파를 초월하여 서로 존중하고 배려하며 상생의 HARMONIZE를 이루어 갑니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- representative greeting -->
+  <section class="section section-tint-gold">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Greeting</span>
+        <h2 data-i18n="about.greetTitle">대표 인사말</h2>
+      </div>
+      <div class="greet-wrap">
+        <figure class="greet-photo reveal"><img src="images/photo4.png" alt="이정환 대표 인사말" loading="lazy"></figure>
+        <div class="greet-body reveal reveal-d1">
+          <div data-i18n="about.greetBody">
+            <p>GBM 선교운동 연합회를 찾아주신 여러분을 환영합니다.</p>
+            <p>세계 비즈니스 선교운동 연합회(Global BAM Movement)는 비즈니스와 선교를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.</p>
+            <p>2025년 7월 24일 서울 테헤란 오피스빌딩에서의 창립총회를 시작으로, 태국 치앙마이를 거점 삼아 “비즈니스를 통한 선교, 하나의 부르심, 전 세계적 영향력”의 비전을 향해 나아가고 있습니다.</p>
+            <p>“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라”(요한복음 20:31) — 이 말씀 위에서 여러분의 기도와 동역을 부탁드립니다.</p>
+          </div>
+          <p class="greet-sign"><small data-i18n="about.greetSignSub">GBM 선교운동 연합회 대표</small><span data-i18n="about.greetSignName">이 정 환</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GBM's special culture: Seolleung workplace church -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">GBM's Special Culture</span>
+        <h2 data-i18n="about.cultureTitle">선릉 일터교회 비전</h2>
+        <p data-i18n="about.cultureDesc">서울 강남 선릉에 세워질 GBM의 일터교회는 일상과 예배가 만나는 열린 공간입니다.</p>
+      </div>
+      <div class="building reveal">
+        <div class="floor">
+          <span class="floor-badge">4F</span>
+          <div>
+            <h3 data-i18n="about.f4t">제1호 교회</h3>
+            <p data-i18n="about.f4d">예배, 말씀, 기도, 영적 회복 — 100개 교회 비전의 첫 번째 교회</p>
+          </div>
+        </div>
+        <div class="floor">
+          <span class="floor-badge">3F</span>
+          <div>
+            <h3 data-i18n="about.f3t">임원·그룹별 사무공간</h3>
+            <p data-i18n="about.f3d">테이블 미팅이 가능한 유연한 업무 공간</p>
+          </div>
+        </div>
+        <div class="floor">
+          <span class="floor-badge">2F</span>
+          <div>
+            <h3 data-i18n="about.f2t">세미나 공간</h3>
+            <p data-i18n="about.f2d">전문 강사 세미나 상시 운영</p>
+          </div>
+        </div>
+        <div class="floor">
+          <span class="floor-badge">1F</span>
+          <div>
+            <h3 data-i18n="about.f1t">힐링카페</h3>
+            <p data-i18n="about.f1d">교제, 격려, 비전 공유가 이루어지는 힐링 공간</p>
+          </div>
+        </div>
+      </div>
+      <p class="building-note reveal" data-i18n="about.cultureNote">☕ 건강·문화·재테크 등 다양한 세미나에 일반인도 누구나 편하게 참여할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <!-- organization chart -->
+  <section class="section section-tint-sage">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Organization</span>
+        <h2 data-i18n="about.orgTitle">조직도</h2>
+      </div>
+      <div class="org-chart reveal">
+        <div class="org-root" data-i18n="org.board">이사회</div>
+        <div class="org-stem" aria-hidden="true"></div>
+        <div class="org-grid">
+          <div class="org-dept">
+            <h3 data-i18n="org.exec">운영본부</h3>
+            <ul>
+              <li data-i18n="org.exec1">사무국</li>
+              <li data-i18n="org.exec2">전략기획실</li>
+              <li data-i18n="org.exec3">재무관리팀</li>
+              <li data-i18n="org.exec4">홍보·미디어팀</li>
+            </ul>
+          </div>
+          <div class="org-dept">
+            <h3 data-i18n="org.mission">선교사역국</h3>
+            <ul>
+              <li data-i18n="org.mission1">BAM 지원팀</li>
+              <li data-i18n="org.mission2">프로젝트 개발팀</li>
+              <li data-i18n="org.mission3">선교 협력팀</li>
+            </ul>
+          </div>
+          <div class="org-dept">
+            <h3 data-i18n="org.training">훈련센터</h3>
+            <ul>
+              <li data-i18n="org.training1">훈련기획</li>
+              <li data-i18n="org.training2">리더십 훈련</li>
+              <li data-i18n="org.training3">청년 BAM 인큐베이터</li>
+            </ul>
+          </div>
+          <div class="org-dept">
+            <h3 data-i18n="org.region">지역 네트워크</h3>
+            <ul>
+              <li data-i18n="org.region1">아시아</li>
+              <li data-i18n="org.region2">아프리카</li>
+              <li data-i18n="org.region3">중남미</li>
+              <li data-i18n="org.region4">중동</li>
+              <li data-i18n="org.region5">유럽</li>
+            </ul>
+          </div>
+          <div class="org-dept">
+            <h3 data-i18n="org.partner">후원자·파트너 센터</h3>
+            <ul>
+              <li data-i18n="org.partner1">기드온 300</li>
+              <li data-i18n="org.partner2">교회·단체 제휴</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- timeline -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">History</span>
+        <h2 data-i18n="about.timelineTitle">걸어온 길</h2>
+      </div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <span class="tl-date">2025. 07. 24</span>
+          <h3 data-i18n="tl.1t">GBM 창립총회</h3>
+          <p data-i18n="tl.1d">서울 테헤란 오피스빌딩에서 창립총회 개최</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2025. 08</span>
+          <h3 data-i18n="tl.2t">치앙마이 BAM 카페 허브 프로젝트 착수</h3>
+          <p data-i18n="tl.2d">선교사·사역자를 위한 워크스페이스 &amp; 선교 하이브리드 허브</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2025. 09</span>
+          <h3 data-i18n="tl.3t">제1회 BAM 워크샵</h3>
+          <p data-i18n="tl.3d">BAM 사역자와 후원자가 함께한 첫 워크샵</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2025. 10</span>
+          <h3 data-i18n="tl.4t">Gideon 300 후원자 모집 시작</h3>
+          <p data-i18n="tl.4d">자립 기반 구축을 위한 기드온 300 캠페인 개시</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2025. 11</span>
+          <h3 data-i18n="tl.5t">BAM 교육 파이프라인 1기 모집</h3>
+          <p data-i18n="tl.5d">한국어 교육 + 직업훈련 + 선교 파송 파이프라인</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date" data-i18n="tl.6date">예정</span>
+          <h3 data-i18n="tl.6t">선릉 일터교회 설립</h3>
+          <p data-i18n="tl.6d">서울 강남 선릉 일터교회 [추후 업데이트 / TBD]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- interfaith harmony statement -->
+  <section class="section section-tint-blue">
+    <div class="container">
+      <div class="quote-banner reveal">
+        <blockquote data-i18n="about.harmonyQuote">교파를 초월하여 각자의 다름을 인정하고 서로 존중하고<br>배려와 상생으로 HARMONIZE를 이루어 가는 공동체</blockquote>
+        <p class="quote-sub" data-i18n="about.harmonySub">A community that transcends denominations, respects differences, and pursues harmony through mutual care.</p>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 3 · 사역/사업 안내 / MINISTRIES  (#ministry)
+     ============================================================ -->
+<section id="page-ministry" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="min.heroTitle">사역/사업 안내</h1>
+    <p data-i18n="min.heroSub">비즈니스와 선교가 하나 되는 GBM의 다섯 가지 핵심 사역</p>
+  </div>
+
+  <!-- 5 core ministry areas -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Core Ministries</span>
+        <h2 data-i18n="min.coreTitle">핵심 사역 분야</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card ministry-card reveal">
+          <div class="card-icon icon-blue">💼</div>
+          <h3 data-i18n="min.m1t">킹덤 비즈니스 런칭</h3>
+          <p data-i18n="min.m1d">카페, 직업교육, 스타트업 등 선교지에 자립 가능한 비즈니스를 창업합니다.</p>
+        </div>
+        <div class="card ministry-card reveal reveal-d1">
+          <div class="card-icon icon-gold">✈️</div>
+          <h3 data-i18n="min.m2t">선교사 훈련 및 파송</h3>
+          <p data-i18n="min.m2d">자립형 선교사를 위한 BAM 아카데미를 운영합니다.</p>
+        </div>
+        <div class="card ministry-card reveal reveal-d2">
+          <div class="card-icon icon-sage">🌐</div>
+          <h3 data-i18n="min.m3t">글로벌 네트워크</h3>
+          <p data-i18n="min.m3d">BAM 기업가, 후원자, 선교사를 연결하는 플랫폼을 만들어 갑니다.</p>
+        </div>
+        <div class="card ministry-card reveal reveal-d1">
+          <div class="card-icon icon-beige">📖</div>
+          <h3 data-i18n="min.m4t">교회 개척 및 제자훈련</h3>
+          <p data-i18n="min.m4d">현지 공동체 중심의 교회를 개척하고 제자를 세웁니다.</p>
+        </div>
+        <div class="card ministry-card reveal reveal-d2">
+          <div class="card-icon icon-gold">🤝</div>
+          <h3 data-i18n="min.m5t">후원 캠페인</h3>
+          <p data-i18n="min.m5d">Gideon 300 등 정기 후원자를 동원하는 캠페인을 운영합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- upcoming projects -->
+  <section class="section section-tint-gold">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Upcoming Projects</span>
+        <h2 data-i18n="min.projTitle">추진 중인 프로젝트</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card project-card reveal">
+          <h3 data-i18n="min.p1t">☕ 치앙마이 BAM 카페 허브</h3>
+          <p data-i18n="min.p1d">선교사와 사역자를 위한 워크스페이스 + 선교 하이브리드 공간</p>
+        </div>
+        <div class="card project-card reveal reveal-d1">
+          <h3 data-i18n="min.p2t">🏗️ BAM 기반 근로자 선발 프로그램</h3>
+          <p data-i18n="min.p2d">한국 건설 산업과 연계한 이주 근로자 선교</p>
+        </div>
+        <div class="card project-card reveal reveal-d2">
+          <h3 data-i18n="min.p3t">🎓 BAM 교육 파이프라인</h3>
+          <p data-i18n="min.p3d">한국어 교육 + 직업훈련 + 선교 파송으로 이어지는 교육 과정</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- how to participate -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Participate</span>
+        <h2 data-i18n="min.joinTitle">참여 방법</h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card join-item reveal">
+          <div class="card-icon icon-gold">💛</div>
+          <div>
+            <h3 data-i18n="min.j1t">정기 후원자 되기</h3>
+            <p data-i18n="min.j1d">기드온 300과 함께 GBM의 자립 기반을 세워 주세요.</p>
+          </div>
+        </div>
+        <div class="card join-item reveal reveal-d1">
+          <div class="card-icon icon-blue">🧭</div>
+          <div>
+            <h3 data-i18n="min.j2t">BAM 멘토/코치 참여</h3>
+            <p data-i18n="min.j2d">비즈니스 경험으로 선교지 창업가를 세워 주세요.</p>
+          </div>
+        </div>
+        <div class="card join-item reveal reveal-d1">
+          <div class="card-icon icon-sage">✈️</div>
+          <div>
+            <h3 data-i18n="min.j3t">사역자/선교사 참여</h3>
+            <p data-i18n="min.j3d">BAM 아카데미에서 훈련받고 선교지로 파송받으세요.</p>
+          </div>
+        </div>
+        <div class="card join-item reveal reveal-d2">
+          <div class="card-icon icon-beige">⛪</div>
+          <div>
+            <h3 data-i18n="min.j4t">교회/단체 제휴</h3>
+            <p data-i18n="min.j4d">교회와 단체가 GBM의 동역 파트너가 될 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+      <p class="center mt-2 reveal"><a href="#contact" class="btn btn-primary" data-i18n="min.joinCta">참여 문의하기</a></p>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 4 · 공지·소식 / NEWS  (#news)
+     ============================================================ -->
+<section id="page-news" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="news.heroTitle">공지·소식</h1>
+    <p data-i18n="news.heroSub">GBM의 새로운 소식과 공지사항을 전해 드립니다.</p>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="news-controls">
+        <div class="filter-tabs" id="newsTabs" role="tablist">
+          <button class="active" data-cat="all"    data-i18n="news.tabAll">전체</button>
+          <button data-cat="notice" data-i18n="news.tabNotice">공지</button>
+          <button data-cat="news"   data-i18n="news.tabNews">소식</button>
+          <button data-cat="event"  data-i18n="news.tabEvent">행사</button>
+        </div>
+        <div class="news-tools">
+          <!-- sort toggle: default newest-first (desc) -->
+          <button id="newsSort" class="sort-btn" type="button" aria-label="정렬 순서 바꾸기">
+            <span class="sort-arrow" id="newsSortArrow" aria-hidden="true">↓</span>
+            <span data-i18n="news.sortByDate">날짜순</span>
+          </button>
+          <div class="search-box">
+            <input type="search" id="newsSearch" data-i18n-ph="news.searchPh" placeholder="검색어를 입력하세요" aria-label="소식 검색">
+          </div>
+        </div>
+      </div>
+      <div class="news-list" id="newsList"><!-- rendered by JS --></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 5 · 갤러리 / GALLERY  (#gallery)
+     ============================================================ -->
+<section id="page-gallery" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="gal.heroTitle">갤러리</h1>
+    <p data-i18n="gal.heroSub">GBM의 사역 현장을 사진으로 만나 보세요.</p>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="filter-tabs" id="galTabs" style="justify-content:center;margin-bottom:1.8rem">
+        <button class="active" data-cat="all"       data-i18n="gal.tabAll">전체</button>
+        <button data-cat="inaugural" data-i18n="gal.tabInaugural">창립총회</button>
+        <button data-cat="ministry"  data-i18n="gal.tabMinistry">사역현장</button>
+        <button data-cat="event"     data-i18n="gal.tabEvent">행사</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"><!-- rendered by JS --></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 6 · 오시는 길 / LOCATION  (#location)
+     ============================================================ -->
+<section id="page-location" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="loc.heroTitle">오시는 길</h1>
+    <p data-i18n="loc.heroSub">GBM의 거점과 연락처를 안내해 드립니다.</p>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2">
+        <div class="card loc-card reveal">
+          <h3>🌏 <span data-i18n="loc.hqTitle">국제 본부</span></h3>
+          <p><strong data-i18n="loc.hqAddr">태국 치앙마이 (Chiang Mai, Thailand)</strong></p>
+          <p data-i18n="loc.hqDesc">치앙마이를 중심 거점으로 BAM 허브를 세워 갑니다.</p>
+        </div>
+        <div class="card loc-card reveal reveal-d1">
+          <h3>🇰🇷 <span data-i18n="loc.krTitle">한국 베이스</span></h3>
+          <p><strong data-i18n="loc.krAddr">서울 강남구 선릉 (선릉역 인근)</strong></p>
+          <p data-i18n="loc.krDesc">선릉 일터교회 설립 예정 [추후 업데이트 / TBD]</p>
+        </div>
+      </div>
+
+      <!-- Google Maps: Seolleung Station area (37.5045, 127.0488) -->
+      <div class="map-wrap reveal">
+        <iframe
+          src="https://maps.google.com/maps?q=37.5045,127.0488&amp;z=16&amp;output=embed"
+          title="선릉역 지도 (Seolleung Station Map)"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+
+      <div class="grid grid-2 mt-2">
+        <div class="card loc-card reveal">
+          <h3>🚇 <span data-i18n="loc.transTitle">대중교통 안내</span></h3>
+          <ul class="trans-list">
+            <li><span class="line-badge line-2">2</span><span data-i18n="loc.trans1">지하철 2호선 선릉역 하차</span></li>
+            <li><span class="line-badge line-bd">수인분당</span><span data-i18n="loc.trans2">수인분당선 선릉역 하차</span></li>
+          </ul>
+        </div>
+        <div class="card loc-card reveal reveal-d1">
+          <h3>📞 <span data-i18n="loc.contactTitle">연락처</span></h3>
+          <p><strong data-i18n="common.phone">전화</strong> · <a href="tel:010-4922-4584">010-4922-4584</a></p>
+          <p><strong data-i18n="common.email">이메일</strong> · <a href="mailto:fantex7933@gmail.com">fantex7933@gmail.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 7 · 문의하기 / CONTACT  (#contact)
+     ============================================================ -->
+<section id="page-contact" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="ct.heroTitle">문의하기</h1>
+    <p data-i18n="ct.heroSub">궁금하신 점이 있다면 언제든지 문의해 주세요.</p>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="contact-wrap">
+        <!-- contact form → mailto -->
+        <form class="contact-form reveal" action="mailto:fantex7933@gmail.com" method="post" enctype="text/plain">
+          <div class="form-row">
+            <label for="ctName" data-i18n="ct.name">이름</label>
+            <input type="text" id="ctName" name="이름(Name)" required>
+          </div>
+          <div class="form-row">
+            <label for="ctEmail" data-i18n="ct.email">이메일</label>
+            <input type="email" id="ctEmail" name="이메일(Email)" required>
+          </div>
+          <div class="form-row">
+            <label for="ctPhone" data-i18n="ct.phone">전화번호</label>
+            <input type="tel" id="ctPhone" name="전화번호(Phone)">
+          </div>
+          <div class="form-row">
+            <label for="ctType" data-i18n="ct.type">문의 유형</label>
+            <select id="ctType" name="문의유형(Type)">
+              <option data-i18n="ct.type1">일반문의</option>
+              <option data-i18n="ct.type2">후원문의</option>
+              <option data-i18n="ct.type3">사역참여</option>
+              <option data-i18n="ct.type4">기타</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="ctMsg" data-i18n="ct.msg">내용</label>
+            <textarea id="ctMsg" name="내용(Message)" required></textarea>
+          </div>
+          <p class="form-note" data-i18n="ct.note">* 보내기 버튼을 누르면 사용 중인 메일 앱이 열립니다.</p>
+          <button type="submit" class="btn btn-primary" data-i18n="ct.submit">문의 보내기</button>
+        </form>
+
+        <!-- contact info + SNS -->
+        <div class="card contact-info-card reveal reveal-d1">
+          <h3 data-i18n="ct.infoTitle">연락처 안내</h3>
+          <div class="info-line">📞 <a href="tel:010-4922-4584">010-4922-4584</a></div>
+          <div class="info-line">✉️ <a href="mailto:fantex7933@gmail.com">fantex7933@gmail.com</a></div>
+          <div class="info-line">📍 <span data-i18n="ct.addr">태국 치앙마이 · 서울 선릉</span></div>
+          <h3 class="mt-2" data-i18n="ct.sns">SNS</h3>
+          <div class="sns-row">
+            <a href="https://www.instagram.com/globalbam" target="_blank" rel="noopener" aria-label="Instagram @globalbam">📷</a>
+            <a href="mailto:fantex7933@gmail.com" aria-label="Email">✉️</a>
+            <a href="tel:010-4922-4584" aria-label="Phone">📞</a>
+          </div>
+          <p class="mt-2" style="font-size:.85rem;color:var(--muted)">Instagram <strong>@globalbam</strong></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<!-- ============================================================
+     TAB 8 · 후원·헌금 / DONATE  (#donate)
+     ============================================================ -->
+<section id="page-donate" class="page">
+  <div class="page-hero">
+    <h1 data-i18n="dn.heroTitle">후원·헌금</h1>
+    <p data-i18n="dn.heroSub">여러분의 후원이 선교지의 자립과 복음의 열매가 됩니다.</p>
+  </div>
+
+  <!-- why support GBM -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why GBM</span>
+        <h2 data-i18n="dn.whyTitle">왜 GBM을 후원해야 할까요?</h2>
+        <p data-i18n="dn.whyBody">GBM은 일회성 지원이 아니라, 선교지에 자립 가능한 킹덤 비즈니스를 세워 스스로 열매 맺는 선교의 구조를 만들어 갑니다. 여러분의 후원은 카페와 직업교육과 스타트업이 되고, 훈련받은 선교사의 파송이 되고, 현지 공동체의 교회가 됩니다.</p>
+      </div>
+
+      <!-- Gideon 300 -->
+      <div class="gideon-banner reveal">
+        <h3 data-i18n="dn.gideonTitle">GIDEON 300</h3>
+        <blockquote data-i18n="dn.gideonQuote">“300명의 기드온 용사와 함께 경제적 자유를 얻어<br>마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다”</blockquote>
+        <p class="quote-sub" data-i18n="dn.gideonSub">Building a system where 300 Gideon warriors achieve economic freedom to fully devote to mission</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- donation methods -->
+  <section class="section section-tint-gold">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">How to Give</span>
+        <h2 data-i18n="dn.methodTitle">후원 방법</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card donate-method reveal">
+          <h3>💛 <span data-i18n="dn.m1t">정기후원 / 일시후원</span></h3>
+          <p data-i18n="dn.m1d">매월 정기적으로, 또는 원하실 때 일시적으로 후원하실 수 있습니다.</p>
+        </div>
+        <div class="card donate-method reveal reveal-d1">
+          <h3>🏦 <span data-i18n="dn.m2t">계좌 이체</span></h3>
+          <p><span class="tbd" data-i18n="dn.m2d">계좌번호 추후 업데이트 / Bank account TBD</span></p>
+        </div>
+        <div class="card donate-method reveal reveal-d2">
+          <h3>📞 <span data-i18n="dn.m3t">후원 문의</span></h3>
+          <p data-i18n="dn.m3d">후원 관련 문의는 전화 또는 이메일로 연락해 주세요.</p>
+          <p style="margin-top:.5rem"><a href="tel:010-4922-4584"><strong>010-4922-4584</strong></a><br><a href="mailto:fantex7933@gmail.com">fantex7933@gmail.com</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- how donations are used -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Transparency</span>
+        <h2 data-i18n="dn.useTitle">후원금은 이렇게 사용됩니다</h2>
+        <p data-i18n="dn.useDesc">모든 재정은 투명하게 관리됩니다. [상세 재정 보고 추후 업데이트 / TBD]</p>
+      </div>
+      <div class="card reveal" style="max-width:680px;margin:0 auto">
+        <ul class="use-list">
+          <li><span class="dot"></span><span data-i18n="dn.use1">선교지 킹덤 비즈니스 런칭 지원 (카페, 직업교육, 스타트업)</span></li>
+          <li><span class="dot"></span><span data-i18n="dn.use2">BAM 아카데미 — 선교사 훈련 및 파송</span></li>
+          <li><span class="dot"></span><span data-i18n="dn.use3">현지 공동체 중심의 교회 개척과 제자훈련</span></li>
+          <li><span class="dot"></span><span data-i18n="dn.use4">글로벌 BAM 네트워크와 후원 캠페인 운영</span></li>
+        </ul>
+      </div>
+      <!-- closing vision statement -->
+      <div class="quote-banner mt-2 reveal">
+        <blockquote data-i18n="dn.closing">비즈니스를 통한 선교. 하나의 부르심. 전 세계적 영향력.<br>여러분과 함께 그 길을 걸어가겠습니다.</blockquote>
+        <p class="quote-sub" data-i18n="dn.closingVerse">“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라” (요한복음 20:31)</p>
+      </div>
+      <p class="center mt-2 reveal"><a href="#contact" class="btn btn-gold" data-i18n="dn.cta">후원 문의하기</a></p>
+    </div>
+  </section>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<div class="footer-wave" aria-hidden="true">
+  <svg viewBox="0 0 1440 64" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C260,64 520,6 780,22 C1040,38 1240,58 1440,26 L1440,64 L0,64 Z" fill="#33302A"/>
+  </svg>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo3.png" alt="GBM 로고">
+        <div>
+          <strong data-i18n="ft.name">GBM 선교운동 연합회</strong>
+          <small>Global BAM Movement</small>
+        </div>
+      </div>
+      <p data-i18n="ft.desc">비즈니스와 선교를 통합하여 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.</p>
+    </div>
+    <div>
+      <h4 data-i18n="ft.contactTitle">연락처</h4>
+      <ul>
+        <li data-i18n="ft.rep">대표 · 이정환</li>
+        <li>📞 <a href="tel:010-4922-4584">010-4922-4584</a></li>
+        <li>✉️ <a href="mailto:fantex7933@gmail.com">fantex7933@gmail.com</a></li>
+        <li data-i18n="ft.hq">🌏 국제본부 · 태국 치앙마이</li>
+        <li data-i18n="ft.kr">🇰🇷 한국 베이스 · 서울 강남 선릉</li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="ft.snsTitle">SNS</h4>
+      <p>Instagram <a href="https://www.instagram.com/globalbam" target="_blank" rel="noopener"><strong>@globalbam</strong></a></p>
+      <div class="footer-sns">
+        <a href="https://www.instagram.com/globalbam" target="_blank" rel="noopener" aria-label="Instagram">📷</a>
+        <a href="mailto:fantex7933@gmail.com" aria-label="Email">✉️</a>
+        <a href="tel:010-4922-4584" aria-label="Phone">📞</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 GBM 선교운동 연합회. All Rights Reserved.</div>
+</footer>
+
+<!-- back-to-top floating button -->
+<button class="back-top" id="backTop" aria-label="맨 위로">↑</button>
+
+<!-- ============================================================
+     LIGHTBOX (pure CSS/JS)
+     ============================================================ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="닫기">✕</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="이전 사진">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-btn lb-next" id="lbNext" aria-label="다음 사진">›</button>
+  <p class="lb-count" id="lbCount"></p>
+</div>
+
+<noscript><style>.page{display:block}body{opacity:1}</style></noscript>
+
+<script>
+/* ============================================================
+   GBM SPA SCRIPT
+   01. i18n dictionary (ko / en)
+   02. Data (news, gallery)
+   03. Language toggle (localStorage)
+   04. Hash routing
+   05. News render / filter / search / expand
+   06. Gallery render / lightbox
+   07. Header, drawer, back-to-top, reveal, loading
+   ============================================================ */
+
+/* ---------- 01. i18n dictionary ---------- */
+const I18N = {
+  ko: {
+    'brand.name':'GBM 선교운동 연합회','brand.sub':'Global BAM Movement',
+    'nav.home':'홈','nav.about':'소개·인사말','nav.ministry':'사역안내','nav.news':'공지·소식',
+    'nav.gallery':'갤러리','nav.location':'오시는 길','nav.contact':'문의하기','nav.donate':'후원·헌금',
+    'hero.tagline':'비즈니스를 통한 선교.<br>하나의 부르심. 전 세계적 영향력.',
+    'hero.taglineSub':'Business as Mission. One Calling. Global Impact.',
+    'hero.verse':'“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라”',
+    'hero.verseRef':'요한복음 20:31',
+    'hero.ctaAbout':'GBM 알아보기','hero.ctaDonate':'후원하기',
+    'home.visionTitle':'GBM의 비전',
+    'home.visionDesc':'비즈니스와 선교의 통합으로 하나님 나라를 세워가는 네 가지 비전입니다.',
+    'home.vision1t':'기드온 300 후원자','home.vision1d':'300명의 기드온 후원자를 통한 자립 기반 구축',
+    'home.vision2t':'100개 교회 개척','home.vision2d':'100개 교회 개척 및 현지 제자 양성',
+    'home.vision3t':'치앙마이 BAM 허브','home.vision3d':'치앙마이 중심 거점 BAM 허브 구축',
+    'home.vision4t':'훈련과 파송 시스템','home.vision4d':'BAM 사역자를 위한 훈련과 파송 시스템',
+    'home.minTitle':'핵심 사역 분야','home.minDesc':'GBM이 집중하는 다섯 가지 핵심 사역입니다.',
+    'home.min1t':'킹덤 비즈니스 런칭','home.min1d':'Kingdom Business Launching',
+    'home.min2t':'선교사 훈련 및 파송','home.min2d':'Missionary Training &amp; Sending',
+    'home.min3t':'글로벌 네트워크 형성','home.min3d':'Global BAM Network',
+    'home.min4t':'교회 개척 및 제자훈련','home.min4d':'Church Planting &amp; Discipleship',
+    'home.min5t':'후원 캠페인 운영','home.min5d':'Support Campaigns',
+    'home.minMore':'사역 안내 자세히 보기',
+    'home.newsTitle':'최근 소식','home.newsMore':'공지·소식 전체 보기',
+    'home.photosTitle':'GBM 창립총회',
+    'home.photosDesc':'2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회가 첫걸음을 내디뎠습니다.',
+    'home.photoCap1':'창립총회 현장','home.photoCap2':'창립총회 단체 사진','home.galleryMore':'갤러리 더 보기',
+    'about.heroTitle':'소개·인사말','about.heroSub':'세계 비즈니스 선교운동 연합회 — Global BAM Movement',
+    'about.introTitle':'GBM은 이런 공동체입니다',
+    'about.introDesc':'비즈니스와 선교(BAM)를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.',
+    'about.visionCardT':'비전','about.visionCardD':'치앙마이 중심의 BAM 허브와 100개 교회 개척, 300명의 기드온 후원자를 통한 자립 기반 위에 세계 선교의 새로운 길을 엽니다.',
+    'about.missionCardT':'미션','about.missionCardD':'비즈니스를 통한 선교(Business as Mission)로 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결합니다.',
+    'about.valuesCardT':'핵심 가치','about.valuesCardD':'하나의 부르심, 자립, 그리고 연합 — 교파를 초월하여 서로 존중하고 배려하며 상생의 HARMONIZE를 이루어 갑니다.',
+    'about.greetTitle':'대표 인사말',
+    'about.greetBody':'<p>GBM 선교운동 연합회를 찾아주신 여러분을 환영합니다.</p><p>세계 비즈니스 선교운동 연합회(Global BAM Movement)는 비즈니스와 선교를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.</p><p>2025년 7월 24일 서울 테헤란 오피스빌딩에서의 창립총회를 시작으로, 태국 치앙마이를 거점 삼아 “비즈니스를 통한 선교, 하나의 부르심, 전 세계적 영향력”의 비전을 향해 나아가고 있습니다.</p><p>“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라”(요한복음 20:31) — 이 말씀 위에서 여러분의 기도와 동역을 부탁드립니다.</p>',
+    'about.greetSignSub':'GBM 선교운동 연합회 대표','about.greetSignName':'이 정 환',
+    'about.cultureTitle':'선릉 일터교회 비전',
+    'about.cultureDesc':'서울 강남 선릉에 세워질 GBM의 일터교회는 일상과 예배가 만나는 열린 공간입니다.',
+    'about.f4t':'제1호 교회','about.f4d':'예배, 말씀, 기도, 영적 회복 — 100개 교회 비전의 첫 번째 교회',
+    'about.f3t':'임원·그룹별 사무공간','about.f3d':'테이블 미팅이 가능한 유연한 업무 공간',
+    'about.f2t':'세미나 공간','about.f2d':'전문 강사 세미나 상시 운영',
+    'about.f1t':'힐링카페','about.f1d':'교제, 격려, 비전 공유가 이루어지는 힐링 공간',
+    'about.cultureNote':'☕ 건강·문화·재테크 등 다양한 세미나에 일반인도 누구나 편하게 참여할 수 있습니다.',
+    'about.orgTitle':'조직도',
+    'org.board':'이사회',
+    'org.exec':'운영본부','org.exec1':'사무국','org.exec2':'전략기획실','org.exec3':'재무관리팀','org.exec4':'홍보·미디어팀',
+    'org.mission':'선교사역국','org.mission1':'BAM 지원팀','org.mission2':'프로젝트 개발팀','org.mission3':'선교 협력팀',
+    'org.training':'훈련센터','org.training1':'훈련기획','org.training2':'리더십 훈련','org.training3':'청년 BAM 인큐베이터',
+    'org.region':'지역 네트워크','org.region1':'아시아','org.region2':'아프리카','org.region3':'중남미','org.region4':'중동','org.region5':'유럽',
+    'org.partner':'후원자·파트너 센터','org.partner1':'기드온 300','org.partner2':'교회·단체 제휴',
+    'about.timelineTitle':'걸어온 길',
+    'tl.1t':'GBM 창립총회','tl.1d':'서울 테헤란 오피스빌딩에서 창립총회 개최',
+    'tl.2t':'치앙마이 BAM 카페 허브 프로젝트 착수','tl.2d':'선교사·사역자를 위한 워크스페이스 &amp; 선교 하이브리드 허브',
+    'tl.3t':'제1회 BAM 워크샵','tl.3d':'BAM 사역자와 후원자가 함께한 첫 워크샵',
+    'tl.4t':'Gideon 300 후원자 모집 시작','tl.4d':'자립 기반 구축을 위한 기드온 300 캠페인 개시',
+    'tl.5t':'BAM 교육 파이프라인 1기 모집','tl.5d':'한국어 교육 + 직업훈련 + 선교 파송 파이프라인',
+    'tl.6date':'예정','tl.6t':'선릉 일터교회 설립','tl.6d':'서울 강남 선릉 일터교회 [추후 업데이트 / TBD]',
+    'about.harmonyQuote':'교파를 초월하여 각자의 다름을 인정하고 서로 존중하고<br>배려와 상생으로 HARMONIZE를 이루어 가는 공동체',
+    'about.harmonySub':'A community that transcends denominations, respects differences, and pursues harmony through mutual care.',
+    'min.heroTitle':'사역/사업 안내','min.heroSub':'비즈니스와 선교가 하나 되는 GBM의 다섯 가지 핵심 사역',
+    'min.coreTitle':'핵심 사역 분야',
+    'min.m1t':'킹덤 비즈니스 런칭','min.m1d':'카페, 직업교육, 스타트업 등 선교지에 자립 가능한 비즈니스를 창업합니다.',
+    'min.m2t':'선교사 훈련 및 파송','min.m2d':'자립형 선교사를 위한 BAM 아카데미를 운영합니다.',
+    'min.m3t':'글로벌 네트워크','min.m3d':'BAM 기업가, 후원자, 선교사를 연결하는 플랫폼을 만들어 갑니다.',
+    'min.m4t':'교회 개척 및 제자훈련','min.m4d':'현지 공동체 중심의 교회를 개척하고 제자를 세웁니다.',
+    'min.m5t':'후원 캠페인','min.m5d':'Gideon 300 등 정기 후원자를 동원하는 캠페인을 운영합니다.',
+    'min.projTitle':'추진 중인 프로젝트',
+    'min.p1t':'☕ 치앙마이 BAM 카페 허브','min.p1d':'선교사와 사역자를 위한 워크스페이스 + 선교 하이브리드 공간',
+    'min.p2t':'🏗️ BAM 기반 근로자 선발 프로그램','min.p2d':'한국 건설 산업과 연계한 이주 근로자 선교',
+    'min.p3t':'🎓 BAM 교육 파이프라인','min.p3d':'한국어 교육 + 직업훈련 + 선교 파송으로 이어지는 교육 과정',
+    'min.joinTitle':'참여 방법',
+    'min.j1t':'정기 후원자 되기','min.j1d':'기드온 300과 함께 GBM의 자립 기반을 세워 주세요.',
+    'min.j2t':'BAM 멘토/코치 참여','min.j2d':'비즈니스 경험으로 선교지 창업가를 세워 주세요.',
+    'min.j3t':'사역자/선교사 참여','min.j3d':'BAM 아카데미에서 훈련받고 선교지로 파송받으세요.',
+    'min.j4t':'교회/단체 제휴','min.j4d':'교회와 단체가 GBM의 동역 파트너가 될 수 있습니다.',
+    'min.joinCta':'참여 문의하기',
+    'news.heroTitle':'공지·소식','news.heroSub':'GBM의 새로운 소식과 공지사항을 전해 드립니다.',
+    'news.tabAll':'전체','news.tabNotice':'공지','news.tabNews':'소식','news.tabEvent':'행사',
+    'news.searchPh':'검색어를 입력하세요','news.empty':'검색 결과가 없습니다.','news.sortByDate':'날짜순',
+    'gal.heroTitle':'갤러리','gal.heroSub':'GBM의 사역 현장을 사진으로 만나 보세요.',
+    'gal.tabAll':'전체','gal.tabInaugural':'창립총회','gal.tabMinistry':'사역현장','gal.tabEvent':'행사',
+    'gal.empty':'사진이 준비 중입니다. [추후 업데이트]',
+    'loc.heroTitle':'오시는 길','loc.heroSub':'GBM의 거점과 연락처를 안내해 드립니다.',
+    'loc.hqTitle':'국제 본부','loc.hqAddr':'태국 치앙마이 (Chiang Mai, Thailand)','loc.hqDesc':'치앙마이를 중심 거점으로 BAM 허브를 세워 갑니다.',
+    'loc.krTitle':'한국 베이스','loc.krAddr':'서울 강남구 선릉 (선릉역 인근)','loc.krDesc':'선릉 일터교회 설립 예정 [추후 업데이트 / TBD]',
+    'loc.transTitle':'대중교통 안내','loc.trans1':'지하철 2호선 선릉역 하차','loc.trans2':'수인분당선 선릉역 하차',
+    'loc.contactTitle':'연락처','common.phone':'전화','common.email':'이메일',
+    'ct.heroTitle':'문의하기','ct.heroSub':'궁금하신 점이 있다면 언제든지 문의해 주세요.',
+    'ct.name':'이름','ct.email':'이메일','ct.phone':'전화번호','ct.type':'문의 유형',
+    'ct.type1':'일반문의','ct.type2':'후원문의','ct.type3':'사역참여','ct.type4':'기타',
+    'ct.msg':'내용','ct.note':'* 보내기 버튼을 누르면 사용 중인 메일 앱이 열립니다.','ct.submit':'문의 보내기',
+    'ct.infoTitle':'연락처 안내','ct.addr':'태국 치앙마이 · 서울 선릉','ct.sns':'SNS',
+    'dn.heroTitle':'후원·헌금','dn.heroSub':'여러분의 후원이 선교지의 자립과 복음의 열매가 됩니다.',
+    'dn.whyTitle':'왜 GBM을 후원해야 할까요?',
+    'dn.whyBody':'GBM은 일회성 지원이 아니라, 선교지에 자립 가능한 킹덤 비즈니스를 세워 스스로 열매 맺는 선교의 구조를 만들어 갑니다. 여러분의 후원은 카페와 직업교육과 스타트업이 되고, 훈련받은 선교사의 파송이 되고, 현지 공동체의 교회가 됩니다.',
+    'dn.gideonTitle':'GIDEON 300',
+    'dn.gideonQuote':'“300명의 기드온 용사와 함께 경제적 자유를 얻어<br>마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다”',
+    'dn.gideonSub':'Building a system where 300 Gideon warriors achieve economic freedom to fully devote to mission',
+    'dn.methodTitle':'후원 방법',
+    'dn.m1t':'정기후원 / 일시후원','dn.m1d':'매월 정기적으로, 또는 원하실 때 일시적으로 후원하실 수 있습니다.',
+    'dn.m2t':'계좌 이체','dn.m2d':'계좌번호 추후 업데이트 / Bank account TBD',
+    'dn.m3t':'후원 문의','dn.m3d':'후원 관련 문의는 전화 또는 이메일로 연락해 주세요.',
+    'dn.useTitle':'후원금은 이렇게 사용됩니다','dn.useDesc':'모든 재정은 투명하게 관리됩니다. [상세 재정 보고 추후 업데이트 / TBD]',
+    'dn.use1':'선교지 킹덤 비즈니스 런칭 지원 (카페, 직업교육, 스타트업)',
+    'dn.use2':'BAM 아카데미 — 선교사 훈련 및 파송',
+    'dn.use3':'현지 공동체 중심의 교회 개척과 제자훈련',
+    'dn.use4':'글로벌 BAM 네트워크와 후원 캠페인 운영',
+    'dn.closing':'비즈니스를 통한 선교. 하나의 부르심. 전 세계적 영향력.<br>여러분과 함께 그 길을 걸어가겠습니다.',
+    'dn.closingVerse':'“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라” (요한복음 20:31)',
+    'dn.cta':'후원 문의하기',
+    'ft.name':'GBM 선교운동 연합회',
+    'ft.desc':'비즈니스와 선교를 통합하여 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.',
+    'ft.contactTitle':'연락처','ft.rep':'대표 · 이정환','ft.hq':'🌏 국제본부 · 태국 치앙마이','ft.kr':'🇰🇷 한국 베이스 · 서울 강남 선릉',
+    'ft.snsTitle':'SNS'
+  },
+  en: {
+    'brand.name':'Global BAM Movement','brand.sub':'GBM 선교운동 연합회',
+    'nav.home':'Home','nav.about':'About','nav.ministry':'Ministries','nav.news':'News',
+    'nav.gallery':'Gallery','nav.location':'Location','nav.contact':'Contact','nav.donate':'Donate',
+    'hero.tagline':'Business as Mission.<br>One Calling. Global Impact.',
+    'hero.taglineSub':'비즈니스를 통한 선교. 하나의 부르심. 전 세계적 영향력.',
+    'hero.verse':'“These are written that you may believe… and that by believing you may have life in his name.”',
+    'hero.verseRef':'John 20:31',
+    'hero.ctaAbout':'About GBM','hero.ctaDonate':'Donate',
+    'home.visionTitle':'Our Vision',
+    'home.visionDesc':'Four visions for building the Kingdom of God through the integration of business and mission.',
+    'home.vision1t':'300 Gideon Partners','home.vision1d':'Building a self-sustaining support base with 300 Gideon partners',
+    'home.vision2t':'100 Churches','home.vision2d':'Planting 100 churches and raising local disciples',
+    'home.vision3t':'Chiang Mai BAM Hub','home.vision3d':'Building a BAM hub centered in Chiang Mai',
+    'home.vision4t':'Training &amp; Sending','home.vision4d':'A training and sending system for BAM workers',
+    'home.minTitle':'Core Ministry Areas','home.minDesc':'The five core ministries GBM focuses on.',
+    'home.min1t':'Kingdom Business Launching','home.min1d':'킹덤 비즈니스 런칭',
+    'home.min2t':'Missionary Training &amp; Sending','home.min2d':'선교사 훈련 및 파송',
+    'home.min3t':'Global BAM Network','home.min3d':'글로벌 네트워크 형성',
+    'home.min4t':'Church Planting &amp; Discipleship','home.min4d':'교회 개척 및 제자훈련',
+    'home.min5t':'Support Campaigns','home.min5d':'후원 캠페인 운영',
+    'home.minMore':'Explore Our Ministries',
+    'home.newsTitle':'Latest News','home.newsMore':'View All News',
+    'home.photosTitle':'GBM Inaugural Assembly',
+    'home.photosDesc':'On July 24, 2025, the Global BAM Movement took its first step at the Teheran Office Building in Seoul.',
+    'home.photoCap1':'Inaugural assembly','home.photoCap2':'Group photo','home.galleryMore':'View Gallery',
+    'about.heroTitle':'About GBM','about.heroSub':'Global BAM Movement — 세계 비즈니스 선교운동 연합회',
+    'about.introTitle':'Who We Are',
+    'about.introDesc':'A global network integrating Business and Mission (BAM) — building self-sustaining Kingdom businesses in mission fields and connecting supporters, missionaries, and BAM entrepreneurs.',
+    'about.visionCardT':'Vision','about.visionCardD':'Opening a new path for world mission on a self-sustaining foundation: a BAM hub centered in Chiang Mai, 100 planted churches, and 300 Gideon partners.',
+    'about.missionCardT':'Mission','about.missionCardD':'Through Business as Mission, we build self-sustaining Kingdom businesses in mission fields and connect supporters, missionaries, and BAM entrepreneurs.',
+    'about.valuesCardT':'Core Values','about.valuesCardD':'One calling, self-sustainability, and unity — transcending denominations, we respect and care for one another to HARMONIZE.',
+    'about.greetTitle':'Representative’s Greeting',
+    'about.greetBody':'<p>Welcome to the Global BAM Movement.</p><p>GBM is a global network that integrates business and mission — building self-sustaining Kingdom businesses in mission fields and connecting supporters, missionaries, and BAM entrepreneurs.</p><p>Beginning with our inaugural assembly on July 24, 2025 at the Teheran Office Building in Seoul, and with Chiang Mai, Thailand as our hub, we press on toward the vision of “Business as Mission. One Calling. Global Impact.”</p><p>“These are written that you may believe… and that by believing you may have life in his name.” (John 20:31) — On this Word, we ask for your prayers and partnership.</p>',
+    'about.greetSignSub':'Representative, Global BAM Movement','about.greetSignName':'Lee Jung-hwan',
+    'about.cultureTitle':'Seolleung Workplace Church Vision',
+    'about.cultureDesc':'GBM’s workplace church in Seolleung, Gangnam, Seoul — an open space where daily life meets worship.',
+    'about.f4t':'Church #1 of 100','about.f4d':'Worship, Word, prayer, and spiritual restoration — the first of 100 churches',
+    'about.f3t':'Executive &amp; Group Offices','about.f3d':'Flexible workspaces for table meetings',
+    'about.f2t':'Seminar Space','about.f2d':'Ongoing professional seminars',
+    'about.f1t':'Healing Café','about.f1d':'A healing space for fellowship, encouragement, and vision sharing',
+    'about.cultureNote':'☕ Health, culture, and finance seminars are open for anyone to join.',
+    'about.orgTitle':'Organization',
+    'org.board':'Board of Directors',
+    'org.exec':'Executive Office','org.exec1':'General Affairs','org.exec2':'Strategic Planning','org.exec3':'Finance','org.exec4':'PR &amp; Media',
+    'org.mission':'BAM Mission Dept','org.mission1':'BAM Support Team','org.mission2':'Project Development Team','org.mission3':'Mission Cooperation Team',
+    'org.training':'Training Center','org.training1':'Training Planning','org.training2':'Leadership Training','org.training3':'Youth BAM Incubator',
+    'org.region':'Regional Hubs','org.region1':'Asia','org.region2':'Africa','org.region3':'Latin America','org.region4':'Middle East','org.region5':'Europe',
+    'org.partner':'Supporter &amp; Partner Center','org.partner1':'Gideon 300','org.partner2':'Church &amp; Organization Partnerships',
+    'about.timelineTitle':'Our Journey',
+    'tl.1t':'GBM Inaugural Assembly','tl.1d':'Held at the Teheran Office Building, Seoul',
+    'tl.2t':'Chiang Mai BAM Café Hub Launched','tl.2d':'A workspace + mission hybrid hub for missionaries and workers',
+    'tl.3t':'1st BAM Workshop','tl.3d':'The first workshop with BAM workers and supporters',
+    'tl.4t':'Gideon 300 Campaign Begins','tl.4d':'Recruiting supporters to build a self-sustaining base',
+    'tl.5t':'BAM Education Pipeline — 1st Cohort','tl.5d':'Korean language + vocational training + mission dispatch',
+    'tl.6date':'Upcoming','tl.6t':'Seolleung Workplace Church','tl.6d':'Seolleung, Gangnam, Seoul [TBD]',
+    'about.harmonyQuote':'A community that transcends denominations, acknowledges each other’s differences,<br>and pursues HARMONIZE through respect, care, and mutual growth.',
+    'about.harmonySub':'교파를 초월하여 각자의 다름을 인정하고 서로 존중하고 배려와 상생으로 HARMONIZE를 이루어 가는 공동체',
+    'min.heroTitle':'Ministries','min.heroSub':'GBM’s five core ministries where business and mission become one',
+    'min.coreTitle':'Core Ministry Areas',
+    'min.m1t':'Kingdom Business Launching','min.m1d':'Launching self-sustaining businesses in mission fields — cafés, vocational training, and startups.',
+    'min.m2t':'Missionary Training &amp; Sending','min.m2d':'Running the BAM Academy for self-sustaining missionaries.',
+    'min.m3t':'Global Network','min.m3d':'A platform connecting BAM entrepreneurs, supporters, and missionaries.',
+    'min.m4t':'Church Planting &amp; Discipleship','min.m4d':'Planting local community-based churches and raising disciples.',
+    'min.m5t':'Support Campaigns','min.m5d':'Mobilizing regular supporters through campaigns like Gideon 300.',
+    'min.projTitle':'Upcoming Projects',
+    'min.p1t':'☕ Chiang Mai BAM Café Hub','min.p1d':'A workspace + mission hybrid space for missionaries and workers',
+    'min.p2t':'🏗️ BAM-based Worker Selection Program','min.p2d':'Migrant worker mission linked with the Korean construction industry',
+    'min.p3t':'🎓 BAM Education Pipeline','min.p3d':'Korean language + vocational training + mission dispatch',
+    'min.joinTitle':'How to Participate',
+    'min.j1t':'Become a Regular Supporter','min.j1d':'Help build GBM’s self-sustaining base with Gideon 300.',
+    'min.j2t':'Join as a BAM Mentor/Coach','min.j2d':'Raise mission-field entrepreneurs with your business experience.',
+    'min.j3t':'Serve as a BAM Missionary','min.j3d':'Get trained at the BAM Academy and be sent to the field.',
+    'min.j4t':'Partner as a Church or Organization','min.j4d':'Churches and organizations can partner with GBM.',
+    'min.joinCta':'Contact Us to Participate',
+    'news.heroTitle':'News &amp; Announcements','news.heroSub':'The latest news and announcements from GBM.',
+    'news.tabAll':'All','news.tabNotice':'Notice','news.tabNews':'News','news.tabEvent':'Events',
+    'news.searchPh':'Search…','news.empty':'No results found.','news.sortByDate':'By date',
+    'gal.heroTitle':'Gallery','gal.heroSub':'See GBM’s ministry in photos.',
+    'gal.tabAll':'All','gal.tabInaugural':'Inaugural','gal.tabMinistry':'Ministry','gal.tabEvent':'Events',
+    'gal.empty':'Photos coming soon. [TBD]',
+    'loc.heroTitle':'Location','loc.heroSub':'GBM’s bases and contact information.',
+    'loc.hqTitle':'International HQ','loc.hqAddr':'Chiang Mai, Thailand','loc.hqDesc':'Building the BAM hub centered in Chiang Mai.',
+    'loc.krTitle':'Korea Base','loc.krAddr':'Seolleung, Gangnam, Seoul (near Seolleung Station)','loc.krDesc':'Seolleung workplace church planned [TBD]',
+    'loc.transTitle':'Public Transportation','loc.trans1':'Subway Line 2 — Seolleung Station','loc.trans2':'Suin–Bundang Line — Seolleung Station',
+    'loc.contactTitle':'Contact','common.phone':'Phone','common.email':'Email',
+    'ct.heroTitle':'Contact Us','ct.heroSub':'Feel free to reach out anytime.',
+    'ct.name':'Name','ct.email':'Email','ct.phone':'Phone','ct.type':'Inquiry Type',
+    'ct.type1':'General','ct.type2':'Donation','ct.type3':'Ministry Participation','ct.type4':'Other',
+    'ct.msg':'Message','ct.note':'* Clicking Send will open your mail app.','ct.submit':'Send Inquiry',
+    'ct.infoTitle':'Contact Information','ct.addr':'Chiang Mai, Thailand · Seolleung, Seoul','ct.sns':'SNS',
+    'dn.heroTitle':'Donate','dn.heroSub':'Your giving becomes self-sustainability and gospel fruit in the mission field.',
+    'dn.whyTitle':'Why Support GBM?',
+    'dn.whyBody':'GBM does not offer one-off aid — we build self-sustaining Kingdom businesses in mission fields, creating a structure of mission that bears its own fruit. Your gift becomes cafés, vocational training, and startups; the sending of trained missionaries; and churches for local communities.',
+    'dn.gideonTitle':'GIDEON 300',
+    'dn.gideonQuote':'“Building a system where 300 Gideon warriors achieve economic freedom<br>to fully devote to mission”',
+    'dn.gideonSub':'300명의 기드온 용사와 함께 경제적 자유를 얻어 마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다',
+    'dn.methodTitle':'How to Give',
+    'dn.m1t':'Regular / One-time Giving','dn.m1d':'Give monthly, or make a one-time gift anytime.',
+    'dn.m2t':'Bank Transfer','dn.m2d':'Bank account TBD / 계좌번호 추후 업데이트',
+    'dn.m3t':'Donation Inquiries','dn.m3d':'For donation inquiries, contact us by phone or email.',
+    'dn.useTitle':'How Your Gift Is Used','dn.useDesc':'All finances are managed transparently. [Detailed financial reports TBD]',
+    'dn.use1':'Launching Kingdom businesses in mission fields (cafés, vocational training, startups)',
+    'dn.use2':'BAM Academy — missionary training and sending',
+    'dn.use3':'Local community-based church planting and discipleship',
+    'dn.use4':'Global BAM network and support campaigns',
+    'dn.closing':'Business as Mission. One Calling. Global Impact.<br>We will walk this road together with you.',
+    'dn.closingVerse':'“These are written that you may believe… and that by believing you may have life in his name.” (John 20:31)',
+    'dn.cta':'Donation Inquiry',
+    'ft.name':'Global BAM Movement',
+    'ft.desc':'A global network integrating business and mission — building self-sustaining Kingdom businesses in mission fields and connecting supporters, missionaries, and BAM entrepreneurs.',
+    'ft.contactTitle':'Contact','ft.rep':'Representative · Lee Jung-hwan','ft.hq':'🌏 HQ · Chiang Mai, Thailand','ft.kr':'🇰🇷 Korea Base · Seolleung, Gangnam, Seoul',
+    'ft.snsTitle':'SNS'
+  }
+};
+
+/* ---------- 02. Data ---------- */
+const NEWS = [
+  { cat:'notice', date:'2025-07-24',
+    t:{ko:'GBM 창립총회 성료', en:'GBM Inaugural Assembly Successfully Held'},
+    b:{ko:'2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회 창립총회가 성황리에 열렸습니다. “비즈니스를 통한 선교, 하나의 부르심, 전 세계적 영향력”의 비전 아래 GBM의 여정이 시작되었습니다.',
+       en:'On July 24, 2025, the inaugural assembly of the Global BAM Movement was held at the Teheran Office Building in Seoul. Under the vision “Business as Mission. One Calling. Global Impact.”, GBM’s journey has begun.'} },
+  { cat:'news', date:'2025-08-15',
+    t:{ko:'치앙마이 BAM 카페 허브 프로젝트 착수', en:'Chiang Mai BAM Café Hub Project Launched'},
+    b:{ko:'선교사와 사역자를 위한 워크스페이스 + 선교 하이브리드 공간인 치앙마이 BAM 카페 허브 프로젝트가 시작되었습니다. 치앙마이 중심 거점 BAM 허브 비전의 첫걸음입니다.',
+       en:'The Chiang Mai BAM Café Hub — a workspace + mission hybrid space for missionaries and workers — has been launched. It is the first step toward the Chiang Mai BAM hub vision.'} },
+  { cat:'event', date:'2025-09-10',
+    t:{ko:'제1회 BAM 워크샵 안내', en:'1st BAM Workshop Announcement'},
+    b:{ko:'제1회 BAM 워크샵을 안내드립니다. 장소와 신청 방법은 추후 공지됩니다. [추후 업데이트 / TBD] · 문의: 010-4922-4584',
+       en:'Announcing the 1st BAM Workshop. Venue and registration details will be announced later. [TBD] · Inquiries: 010-4922-4584'} },
+  { cat:'notice', date:'2025-10-01',
+    t:{ko:'Gideon 300 후원자 모집 시작', en:'Gideon 300 Supporter Recruitment Begins'},
+    b:{ko:'300명의 기드온 용사와 함께 경제적 자유를 얻어 마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다. 기드온 300 정기 후원자 모집이 시작되었습니다.',
+       en:'Building a system where 300 Gideon warriors achieve economic freedom to fully devote to mission. Recruitment of Gideon 300 regular supporters has begun.'} },
+  { cat:'news', date:'2025-11-01',
+    t:{ko:'BAM 교육 파이프라인 1기 모집', en:'BAM Education Pipeline — 1st Cohort Recruitment'},
+    b:{ko:'한국어 교육 + 직업훈련 + 선교 파송으로 이어지는 BAM 교육 파이프라인 1기를 모집합니다. 자세한 내용은 문의해 주세요.',
+       en:'Recruiting the 1st cohort of the BAM Education Pipeline: Korean language + vocational training + mission dispatch. Contact us for details.'} },
+  { cat:'event', date:'2026-07-24',
+    t:{ko:'GBM 선교회 창립 1주년 기념예배', en:'GBM 1st Anniversary Commemorative Worship Service'},
+    b:{ko:'GBM 선교회 창립 1주년을 맞아 기념예배로 함께 하나님께 감사와 영광을 올려드립니다. · 일시: 2026년 7월 24일 16:00 · 장소: 안성 AK센터 (경기도 안성시 양성면 이현배티길 58-30)',
+       en:'Join us for the worship service celebrating the 1st anniversary of GBM’s founding. · Date: July 24, 2026, 16:00 · Venue: Anseong AK Center (58-30 Ihyeonbaeti-gil, Yangseong-myeon, Anseong-si, Gyeonggi-do)'} }
+];
+const NEWS_BADGE = { notice:'news.tabNotice', news:'news.tabNews', event:'news.tabEvent' };
+
+const GALLERY = [
+  { src:'images/photo1.jpg', cat:'inaugural', cap:{ko:'창립총회 현수막', en:'Inaugural assembly banner'} },
+  { src:'images/photo2.jpg', cat:'inaugural', cap:{ko:'창립총회 단체 사진', en:'Inaugural assembly group photo'} },
+  { src:'images/photo3.jpg', cat:'inaugural', cap:{ko:'창립총회 세미나 현장', en:'Seminar session at the inaugural assembly'} },
+  { src:'images/photo4.png', cat:'inaugural', cap:{ko:'대표 인사말', en:'Representative’s address'} },
+  { src:'images/photo5.jpg', cat:'inaugural', cap:{ko:'모임 및 세미나', en:'Meeting and seminar'} }
+];
+
+/* ---------- 03. Language toggle ---------- */
+let cur = localStorage.getItem('gbm-lang') || 'ko';   // default: Korean
+const langBtn = document.getElementById('langBtn');
+
+function applyLang(lang){
+  cur = lang;
+  localStorage.setItem('gbm-lang', lang);
+  document.documentElement.lang = lang;
+  const dict = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v = dict[el.dataset.i18n];
+    if(v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const v = dict[el.dataset.i18nPh];
+    if(v !== undefined) el.placeholder = v;
+  });
+  langBtn.textContent = lang === 'ko' ? '🇺🇸 English' : '🇰🇷 한국어';
+  renderNews(); renderHomeNews(); renderGallery(); setTitle();
+}
+langBtn.addEventListener('click', ()=> applyLang(cur === 'ko' ? 'en' : 'ko'));
+
+/* ---------- 04. Hash routing ---------- */
+const ROUTES = ['home','about','ministry','news','gallery','location','contact','donate'];
+const pages = document.querySelectorAll('.page');
+const navLinks = document.querySelectorAll('.main-nav a');
+
+function currentRoute(){
+  const h = (location.hash || '#home').slice(1);
+  return ROUTES.includes(h) ? h : 'home';
+}
+function setTitle(){
+  const r = currentRoute();
+  document.title = r === 'home'
+    ? 'GBM 선교운동 연합회 | Global BAM Movement'
+    : I18N[cur]['nav.' + r] + ' | GBM 선교운동 연합회';
+}
+function route(){
+  const r = currentRoute();
+  pages.forEach(p => p.classList.toggle('active', p.id === 'page-' + r));
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + r));
+  window.scrollTo(0, 0);
+  closeDrawer();
+  setTitle();
+}
+window.addEventListener('hashchange', route);
+/* tapping the already-active page's link fires no hashchange — still close the drawer */
+navLinks.forEach(a => a.addEventListener('click', closeDrawer));
+
+/* ---------- 05. News ---------- */
+let newsCat = 'all';
+let newsDesc = true;                 // default sort: newest first
+const newsList = document.getElementById('newsList');
+const homeNews = document.getElementById('homeNews');
+const newsSearch = document.getElementById('newsSearch');
+
+function newsItemHTML(n){
+  return `<article class="news-item">
+    <button class="news-item-head" type="button" aria-expanded="false">
+      <span class="news-badge badge-${n.cat}">${I18N[cur][NEWS_BADGE[n.cat]]}</span>
+      <span class="news-title">${n.t[cur]}</span>
+      <span class="news-date">${n.date}</span>
+      <span class="news-arrow" aria-hidden="true">▼</span>
+    </button>
+    <div class="news-body">${n.b[cur]}</div>
+  </article>`;
+}
+function renderNews(){
+  if(!newsList) return;
+  const q = (newsSearch.value || '').trim().toLowerCase();
+  const items = NEWS
+    .filter(n => newsCat === 'all' || n.cat === newsCat)
+    .filter(n => !q || (n.t[cur] + ' ' + n.b[cur]).toLowerCase().includes(q))
+    .slice()
+    .sort((a, b) => newsDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+  newsList.innerHTML = items.length
+    ? items.map(newsItemHTML).join('')
+    : `<p class="news-empty">${I18N[cur]['news.empty']}</p>`;
+}
+function renderHomeNews(){
+  homeNews.innerHTML = NEWS.slice(-3).reverse().map(newsItemHTML).join(''); // newest first
+}
+/* expand/collapse (event delegation on both lists) */
+document.querySelectorAll('.news-list').forEach(list =>
+  list.addEventListener('click', e=>{
+    const head = e.target.closest('.news-item-head');
+    if(!head) return;
+    const item = head.parentElement;
+    item.classList.toggle('open');
+    head.setAttribute('aria-expanded', item.classList.contains('open'));
+  })
+);
+/* category filter tabs */
+document.getElementById('newsTabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  newsCat = btn.dataset.cat;
+  document.querySelectorAll('#newsTabs button').forEach(b => b.classList.toggle('active', b === btn));
+  renderNews();
+});
+newsSearch.addEventListener('input', renderNews);
+/* sort toggle: newest-first (↓) ⇄ oldest-first (↑) */
+const newsSortArrow = document.getElementById('newsSortArrow');
+document.getElementById('newsSort').addEventListener('click', ()=>{
+  newsDesc = !newsDesc;
+  newsSortArrow.textContent = newsDesc ? '↓' : '↑';
+  renderNews();
+});
+
+/* ---------- 06. Gallery & lightbox ---------- */
+let galCat = 'all', curGalItems = [], lbList = [], lbIdx = 0;
+const galleryGrid = document.getElementById('galleryGrid');
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCount = document.getElementById('lbCount');
+
+function renderGallery(){
+  curGalItems = GALLERY.filter(g => galCat === 'all' || g.cat === galCat);
+  galleryGrid.innerHTML = curGalItems.length
+    ? curGalItems.map((g,i)=>`<button class="gallery-item" type="button" data-i="${i}">
+        <img src="${g.src}" alt="${g.cap[cur]}" loading="lazy">
+      </button>`).join('')
+    : `<p class="news-empty" style="grid-column:1/-1">${I18N[cur]['gal.empty']}</p>`;
+}
+document.getElementById('galTabs').addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  galCat = btn.dataset.cat;
+  document.querySelectorAll('#galTabs button').forEach(b => b.classList.toggle('active', b === btn));
+  renderGallery();
+});
+galleryGrid.addEventListener('click', e=>{
+  const b = e.target.closest('.gallery-item');
+  if(b) openLB(curGalItems, +b.dataset.i);
+});
+/* home inaugural photos also open the lightbox */
+document.querySelectorAll('[data-lb]').forEach(b =>
+  b.addEventListener('click', ()=> openLB(GALLERY, +b.dataset.lb))
+);
+
+function openLB(list, i){
+  lbList = list; lbIdx = i;
+  updateLB();
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function updateLB(){
+  const g = lbList[lbIdx];
+  lbImg.src = g.src;
+  lbImg.alt = g.cap[cur];
+  lbCount.textContent = (lbIdx + 1) + ' / ' + lbList.length;
+}
+function closeLB(){
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function stepLB(d){
+  lbIdx = (lbIdx + d + lbList.length) % lbList.length;
+  updateLB();
+}
+document.getElementById('lbClose').addEventListener('click', closeLB);
+document.getElementById('lbPrev').addEventListener('click', ()=> stepLB(-1));
+document.getElementById('lbNext').addEventListener('click', ()=> stepLB(1));
+lightbox.addEventListener('click', e=>{ if(e.target === lightbox) closeLB(); });
+document.addEventListener('keydown', e=>{
+  if(!lightbox.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLB();
+  else if(e.key === 'ArrowLeft') stepLB(-1);
+  else if(e.key === 'ArrowRight') stepLB(1);
+});
+
+/* ---------- 07. Header / drawer / back-to-top / reveal / loading ---------- */
+const header = document.getElementById('siteHeader');
+const backTop = document.getElementById('backTop');
+const menuBtn = document.getElementById('menuBtn');
+
+window.addEventListener('scroll', ()=>{
+  header.classList.toggle('scrolled', window.scrollY > 30);
+  backTop.classList.toggle('show', window.scrollY > 400);
+}, {passive:true});
+backTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+function closeDrawer(){
+  document.body.classList.remove('drawer-open');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}
+menuBtn.addEventListener('click', ()=>{
+  const open = document.body.classList.toggle('drawer-open');
+  menuBtn.setAttribute('aria-expanded', open);
+});
+document.getElementById('drawerBackdrop').addEventListener('click', closeDrawer);
+
+/* scroll-triggered fade-in */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('visible');
+      io.unobserve(en.target);
+    }
+  });
+}, {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* init */
+applyLang(cur);
+route();
+/* rAF gives one painted frame at opacity:0 for the fade; the load listener is a
+   fallback because rAF is throttled in background tabs */
+requestAnimationFrame(()=> document.body.classList.add('loaded'));
+window.addEventListener('load', ()=> document.body.classList.add('loaded'));
+</script>
+</body>
+</html>
