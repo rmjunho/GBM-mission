@@ -325,6 +325,25 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
   font-size:.85rem;color:var(--muted);padding:.28rem 0 .28rem 1.1rem;position:relative;
 }
 .org-dept li::before{content:"";position:absolute;left:0;top:.85em;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+/* org leadership row (회장 아래 부회장·사무총장·감사) */
+.org-leaders{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-bottom:.2rem}
+.org-leader{
+  background:var(--surface);border:1.5px solid var(--blue-pastel);border-radius:12px;
+  padding:.6rem 1.3rem;font-weight:700;color:var(--blue-deep);box-shadow:var(--shadow);
+}
+.org-leader-audit{border-color:var(--gold-deep);color:var(--gold-deep)}
+/* quarter badge (연간 추진 계획) */
+.q-badge{
+  display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;
+  font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:.9rem;
+  background:linear-gradient(135deg,var(--blue),var(--blue-pastel));
+}
+.card:nth-child(2)>.q-badge{background:linear-gradient(135deg,var(--gold-deep),var(--gold))}
+.card:nth-child(3)>.q-badge{background:linear-gradient(135deg,var(--green),#9ED17A)}
+.card:nth-child(4)>.q-badge{background:linear-gradient(135deg,var(--blue-deep),var(--blue))}
+/* main-program card (주요 사업) */
+.biz-card{display:flex;gap:.9rem;align-items:center;padding:1.2rem 1.3rem}
+.biz-card p{color:var(--ink);font-size:.94rem;font-weight:600}
 /* timeline */
 .timeline{position:relative;max-width:640px;margin:0 auto;padding-left:2rem}
 .timeline::before{content:"";position:absolute;left:.55rem;top:.4rem;bottom:.4rem;width:2px;background:var(--line)}
@@ -754,23 +773,40 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
       <div class="section-head reveal">
         <span class="eyebrow">Who We Are</span>
         <h2 data-i18n="about.introTitle">GBM은 이런 공동체입니다</h2>
-        <p data-i18n="about.introDesc">비즈니스와 선교(BAM)를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.</p>
+        <p data-i18n="about.introDesc">GBM 선교회는 300명의 기드온 용사와 함께 100개 교회를 개척하고, 비즈니스 선교(BAM)를 통하여 자립형 선교적 사명을 감당하는 공동체입니다.</p>
       </div>
-      <div class="grid grid-3">
+
+      <!-- slogan (슬로건) -->
+      <div class="quote-banner reveal" style="margin-bottom:2.6rem">
+        <blockquote data-i18n="pv.slogan">“비즈니스 선교를 통하여<br>복음으로 세상을 변화시키고, 사랑으로 열방을 섬긴다.”</blockquote>
+        <p class="quote-sub" data-i18n="pv.sloganSub">Through Business as Mission — transforming the world with the gospel and serving the nations with love.</p>
+      </div>
+
+      <!-- mission (6) & core values (6) -->
+      <div class="grid grid-2">
         <div class="card reveal">
-          <div class="card-icon icon-blue">🔭</div>
-          <h3 data-i18n="about.visionCardT">비전</h3>
-          <p data-i18n="about.visionCardD">치앙마이 중심의 BAM 허브와 100개 교회 개척, 300명의 기드온 후원자를 통한 자립 기반 위에 세계 선교의 새로운 길을 엽니다.</p>
+          <div class="card-icon icon-gold">🕊️</div>
+          <h3 data-i18n="pv.missionT">미션 (Mission)</h3>
+          <ul class="use-list">
+            <li><span class="dot"></span><span data-i18n="pv.m1">복음 전도와 현지 제자 양성</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.m2">해외 선교사 지원 및 교회 개척</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.m3">비즈니스를 통한 파이프라인 구축</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.m4">일터선교를 통한 섬김과 사랑 실천</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.m5">다음 세대 선교 리더 양성</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.m6">교회와 선교단체 간 협력 네트워크</span></li>
+          </ul>
         </div>
         <div class="card reveal reveal-d1">
-          <div class="card-icon icon-gold">🕊️</div>
-          <h3 data-i18n="about.missionCardT">미션</h3>
-          <p data-i18n="about.missionCardD">비즈니스를 통한 선교(Business as Mission)로 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결합니다.</p>
-        </div>
-        <div class="card reveal reveal-d2">
           <div class="card-icon icon-sage">💛</div>
-          <h3 data-i18n="about.valuesCardT">핵심 가치</h3>
-          <p data-i18n="about.valuesCardD">하나의 부르심, 자립, 그리고 연합 — 교파를 초월하여 서로 존중하고 배려하며 상생의 HARMONIZE를 이루어 갑니다.</p>
+          <h3 data-i18n="pv.valuesT">핵심 가치 (Core Values)</h3>
+          <ul class="use-list">
+            <li><span class="dot"></span><span data-i18n="pv.v1">성경 중심</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.v2">기도 중심</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.v3">예배 중심</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.v4">사랑과 섬김</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.v5">선교적 협력</span></li>
+            <li><span class="dot"></span><span data-i18n="pv.v6">정직과 책임</span></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -848,52 +884,48 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
         <h2 data-i18n="about.orgTitle">조직도</h2>
       </div>
       <div class="org-chart reveal">
-        <div class="org-root" data-i18n="org.board">이사회</div>
+        <div class="org-root" data-i18n="org2.president">회장</div>
+        <div class="org-stem" aria-hidden="true"></div>
+        <div class="org-leaders">
+          <span class="org-leader" data-i18n="org2.vice">부회장</span>
+          <span class="org-leader" data-i18n="org2.sec">사무총장</span>
+          <span class="org-leader org-leader-audit" data-i18n="org2.audit">감사</span>
+        </div>
         <div class="org-stem" aria-hidden="true"></div>
         <div class="org-grid">
           <div class="org-dept">
-            <h3 data-i18n="org.exec">운영본부</h3>
-            <ul>
-              <li data-i18n="org.exec1">사무국</li>
-              <li data-i18n="org.exec2">전략기획실</li>
-              <li data-i18n="org.exec3">재무관리팀</li>
-              <li data-i18n="org.exec4">홍보·미디어팀</li>
-            </ul>
+            <h3 data-i18n="org2.finance">재무국</h3>
+            <ul><li data-i18n="org2.financeD">투명한 재정 관리와 후원 집행</li></ul>
           </div>
           <div class="org-dept">
-            <h3 data-i18n="org.mission">선교사역국</h3>
-            <ul>
-              <li data-i18n="org.mission1">BAM 지원팀</li>
-              <li data-i18n="org.mission2">프로젝트 개발팀</li>
-              <li data-i18n="org.mission3">선교 협력팀</li>
-            </ul>
+            <h3 data-i18n="org2.mission">선교국</h3>
+            <ul><li data-i18n="org2.missionD">국내외 선교와 교회 개척 총괄</li></ul>
           </div>
           <div class="org-dept">
-            <h3 data-i18n="org.training">훈련센터</h3>
-            <ul>
-              <li data-i18n="org.training1">훈련기획</li>
-              <li data-i18n="org.training2">리더십 훈련</li>
-              <li data-i18n="org.training3">청년 BAM 인큐베이터</li>
-            </ul>
+            <h3 data-i18n="org2.media">홍보미디어국</h3>
+            <ul><li data-i18n="org2.mediaD">미디어를 통한 복음 전파와 홍보</li></ul>
           </div>
           <div class="org-dept">
-            <h3 data-i18n="org.region">지역 네트워크</h3>
-            <ul>
-              <li data-i18n="org.region1">아시아</li>
-              <li data-i18n="org.region2">아프리카</li>
-              <li data-i18n="org.region3">중남미</li>
-              <li data-i18n="org.region4">중동</li>
-              <li data-i18n="org.region5">유럽</li>
-            </ul>
-          </div>
-          <div class="org-dept">
-            <h3 data-i18n="org.partner">후원자·파트너 센터</h3>
-            <ul>
-              <li data-i18n="org.partner1">기드온 300</li>
-              <li data-i18n="org.partner2">교회·단체 제휴</li>
-            </ul>
+            <h3 data-i18n="org2.prayer">기도지원국</h3>
+            <ul><li data-i18n="org2.prayerD">중보기도와 영적 지원</li></ul>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- annual plan (연간 추진 계획) -->
+  <section class="section section-tint-blue">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Annual Plan</span>
+        <h2 data-i18n="pv.planTitle">연간 추진 계획</h2>
+      </div>
+      <div class="grid grid-4">
+        <div class="card reveal"><div class="q-badge">Q1</div><p data-i18n="pv.q1">비전 선포 및 선교훈련</p></div>
+        <div class="card reveal reveal-d1"><div class="q-badge">Q2</div><p data-i18n="pv.q2">국내 전도 및 지역봉사</p></div>
+        <div class="card reveal reveal-d2"><div class="q-badge">Q3</div><p data-i18n="pv.q3">해외 단기선교</p></div>
+        <div class="card reveal reveal-d3"><div class="q-badge">Q4</div><p data-i18n="pv.q4">선교보고회 및 차년도 계획 수립</p></div>
       </div>
     </div>
   </section>
@@ -936,6 +968,22 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
           <h3 data-i18n="tl.6t">선릉 일터교회 설립</h3>
           <p data-i18n="tl.6d">서울 강남 선릉 일터교회 [추후 업데이트 / TBD]</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- expected impact (기대 효과) -->
+  <section class="section section-tint-sage">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Expected Impact</span>
+        <h2 data-i18n="pv.effectTitle">기대 효과</h2>
+      </div>
+      <div class="grid grid-4">
+        <div class="card center reveal"><div class="card-icon icon-blue" style="margin:0 auto .8rem">🚀</div><h3 data-i18n="pv.e1">비즈니스 선교 구축</h3></div>
+        <div class="card center reveal reveal-d1"><div class="card-icon icon-gold" style="margin:0 auto .8rem">🌍</div><h3 data-i18n="pv.e2">국내·외 선교 활성화</h3></div>
+        <div class="card center reveal reveal-d2"><div class="card-icon icon-sage" style="margin:0 auto .8rem">🌱</div><h3 data-i18n="pv.e3">다음 세대 선교 지도자 배출</h3></div>
+        <div class="card center reveal reveal-d3"><div class="card-icon icon-beige" style="margin:0 auto .8rem">🤝</div><h3 data-i18n="pv.e4">교회와 선교단체 간 협력 강화</h3></div>
       </div>
     </div>
   </section>
@@ -993,6 +1041,28 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
           <h3 data-i18n="min.m5t">후원 캠페인</h3>
           <p data-i18n="min.m5d">Gideon 300 등 정기 후원자를 동원하는 캠페인을 운영합니다.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- main programs (주요 사업 10) -->
+  <section class="section section-tint-blue">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Main Programs</span>
+        <h2 data-i18n="min.bizTitle">주요 사업</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card biz-card reveal"><span class="num-badge">1</span><p data-i18n="min.b1">국내 교회개척 및 전도 사역</p></div>
+        <div class="card biz-card reveal reveal-d1"><span class="num-badge">2</span><p data-i18n="min.b2">해외 단기·장기 선교</p></div>
+        <div class="card biz-card reveal reveal-d2"><span class="num-badge">3</span><p data-i18n="min.b3">선교사 후원 및 돌봄</p></div>
+        <div class="card biz-card reveal"><span class="num-badge">4</span><p data-i18n="min.b4">청년·청소년 선교훈련</p></div>
+        <div class="card biz-card reveal reveal-d1"><span class="num-badge">5</span><p data-i18n="min.b5">선교 세미나 및 컨퍼런스 개최</p></div>
+        <div class="card biz-card reveal reveal-d2"><span class="num-badge">6</span><p data-i18n="min.b6">구제 및 지역사회 봉사 활동</p></div>
+        <div class="card biz-card reveal"><span class="num-badge">7</span><p data-i18n="min.b7">미디어를 활용한 복음 전파</p></div>
+        <div class="card biz-card reveal reveal-d1"><span class="num-badge">8</span><p data-i18n="min.b8">Global Education을 통한 선교 공동체 세움</p></div>
+        <div class="card biz-card reveal reveal-d2"><span class="num-badge">9</span><p data-i18n="min.b9">Global BAM을 통한 선교지 섬김</p></div>
+        <div class="card biz-card reveal"><span class="num-badge">10</span><p data-i18n="min.b10">각 영역별 글로벌 지도자 세움</p></div>
       </div>
     </div>
   </section>
@@ -1287,7 +1357,14 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
       <div class="section-head reveal">
         <span class="eyebrow">Transparency</span>
         <h2 data-i18n="dn.useTitle">후원금은 이렇게 사용됩니다</h2>
-        <p data-i18n="dn.useDesc">모든 재정은 투명하게 관리됩니다. [상세 재정 보고 추후 업데이트 / TBD]</p>
+        <p data-i18n="dn.useDesc">모든 재정은 투명하게 관리하며 정기적으로 보고합니다. [상세 재정 보고 추후 업데이트 / TBD]</p>
+      </div>
+      <!-- funding sources (재정 운영) -->
+      <p class="center reveal" style="margin:0 auto 1.2rem;color:var(--muted);font-weight:700" data-i18n="dn.fundLabel">재정은 다음 재원으로 운영됩니다</p>
+      <div class="grid grid-3 reveal" style="margin-bottom:1.8rem">
+        <div class="card center"><h3>👥 <span data-i18n="dn.fund1">회원 회비</span></h3></div>
+        <div class="card center"><h3>💛 <span data-i18n="dn.fund2">후원금 및 지정헌금</span></h3></div>
+        <div class="card center"><h3>🎪 <span data-i18n="dn.fund3">행사 및 선교 후원</span></h3></div>
       </div>
       <div class="card reveal" style="max-width:680px;margin:0 auto">
         <ul class="use-list">
@@ -1410,7 +1487,7 @@ const I18N = {
     'home.photoCap1':'창립총회 현장','home.photoCap2':'창립총회 단체 사진','home.galleryMore':'갤러리 더 보기',
     'about.heroTitle':'소개·인사말','about.heroSub':'세계 비즈니스 선교운동 연합회 — Global BAM Movement',
     'about.introTitle':'GBM은 이런 공동체입니다',
-    'about.introDesc':'비즈니스와 선교(BAM)를 하나로 통합하여, 선교지에 자립 가능한 킹덤 비즈니스를 세우고 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.',
+    'about.introDesc':'GBM 선교회는 300명의 기드온 용사와 함께 100개 교회를 개척하고, 비즈니스 선교(BAM)를 통하여 자립형 선교적 사명을 감당하는 공동체입니다.',
     'about.visionCardT':'비전','about.visionCardD':'치앙마이 중심의 BAM 허브와 100개 교회 개척, 300명의 기드온 후원자를 통한 자립 기반 위에 세계 선교의 새로운 길을 엽니다.',
     'about.missionCardT':'미션','about.missionCardD':'비즈니스를 통한 선교(Business as Mission)로 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결합니다.',
     'about.valuesCardT':'핵심 가치','about.valuesCardD':'하나의 부르심, 자립, 그리고 연합 — 교파를 초월하여 서로 존중하고 배려하며 상생의 HARMONIZE를 이루어 갑니다.',
@@ -1483,7 +1560,7 @@ const I18N = {
     'dn.m1t':'정기후원 / 일시후원','dn.m1d':'매월 정기적으로, 또는 원하실 때 일시적으로 후원하실 수 있습니다.',
     'dn.m2t':'계좌 이체','dn.m2d':'계좌번호 추후 업데이트 / Bank account TBD',
     'dn.m3t':'후원 문의','dn.m3d':'후원 관련 문의는 전화 또는 이메일로 연락해 주세요.',
-    'dn.useTitle':'후원금은 이렇게 사용됩니다','dn.useDesc':'모든 재정은 투명하게 관리됩니다. [상세 재정 보고 추후 업데이트 / TBD]',
+    'dn.useTitle':'후원금은 이렇게 사용됩니다','dn.useDesc':'모든 재정은 투명하게 관리하며 정기적으로 보고합니다. [상세 재정 보고 추후 업데이트 / TBD]',
     'dn.use1':'선교지 킹덤 비즈니스 런칭 지원 (카페, 직업교육, 스타트업)',
     'dn.use2':'BAM 아카데미 — 선교사 훈련 및 파송',
     'dn.use3':'현지 공동체 중심의 교회 개척과 제자훈련',
@@ -1494,7 +1571,30 @@ const I18N = {
     'ft.name':'GBM 선교운동 연합회',
     'ft.desc':'비즈니스와 선교를 통합하여 선교지에 자립 가능한 킹덤 비즈니스를 세우고, 후원자·선교사·BAM 기업가를 연결하는 글로벌 네트워크입니다.',
     'ft.contactTitle':'연락처','ft.rep':'대표 · 이정환','ft.hq':'🌏 국제본부 · 태국 치앙마이','ft.kr':'🇰🇷 한국 베이스 · 서울 강남 선릉',
-    'ft.snsTitle':'SNS'
+    'ft.snsTitle':'SNS',
+    'pv.slogan':'“비즈니스 선교를 통하여<br>복음으로 세상을 변화시키고, 사랑으로 열방을 섬긴다.”',
+    'pv.sloganSub':'Through Business as Mission — transforming the world with the gospel and serving the nations with love.',
+    'pv.missionT':'미션 (Mission)',
+    'pv.m1':'복음 전도와 현지 제자 양성','pv.m2':'해외 선교사 지원 및 교회 개척','pv.m3':'비즈니스를 통한 파이프라인 구축',
+    'pv.m4':'일터선교를 통한 섬김과 사랑 실천','pv.m5':'다음 세대 선교 리더 양성','pv.m6':'교회와 선교단체 간 협력 네트워크',
+    'pv.valuesT':'핵심 가치 (Core Values)',
+    'pv.v1':'성경 중심','pv.v2':'기도 중심','pv.v3':'예배 중심','pv.v4':'사랑과 섬김','pv.v5':'선교적 협력','pv.v6':'정직과 책임',
+    'pv.planTitle':'연간 추진 계획',
+    'pv.q1':'비전 선포 및 선교훈련','pv.q2':'국내 전도 및 지역봉사','pv.q3':'해외 단기선교','pv.q4':'선교보고회 및 차년도 계획 수립',
+    'pv.effectTitle':'기대 효과',
+    'pv.e1':'비즈니스 선교 구축','pv.e2':'국내·외 선교 활성화','pv.e3':'다음 세대 선교 지도자 배출','pv.e4':'교회와 선교단체 간 협력 강화',
+    'org2.president':'회장','org2.vice':'부회장','org2.sec':'사무총장','org2.audit':'감사',
+    'org2.finance':'재무국','org2.financeD':'투명한 재정 관리와 후원 집행',
+    'org2.mission':'선교국','org2.missionD':'국내외 선교와 교회 개척 총괄',
+    'org2.media':'홍보미디어국','org2.mediaD':'미디어를 통한 복음 전파와 홍보',
+    'org2.prayer':'기도지원국','org2.prayerD':'중보기도와 영적 지원',
+    'min.bizTitle':'주요 사업',
+    'min.b1':'국내 교회개척 및 전도 사역','min.b2':'해외 단기·장기 선교','min.b3':'선교사 후원 및 돌봄',
+    'min.b4':'청년·청소년 선교훈련','min.b5':'선교 세미나 및 컨퍼런스 개최','min.b6':'구제 및 지역사회 봉사 활동',
+    'min.b7':'미디어를 활용한 복음 전파','min.b8':'Global Education을 통한 선교 공동체 세움',
+    'min.b9':'Global BAM을 통한 선교지 섬김','min.b10':'각 영역별 글로벌 지도자 세움',
+    'dn.fundLabel':'재정은 다음 재원으로 운영됩니다',
+    'dn.fund1':'회원 회비','dn.fund2':'후원금 및 지정헌금','dn.fund3':'행사 및 선교 후원'
   },
   en: {
     'brand.name':'Global BAM Movement','brand.sub':'GBM 선교운동 연합회',
@@ -1524,7 +1624,7 @@ const I18N = {
     'home.photoCap1':'Inaugural assembly','home.photoCap2':'Group photo','home.galleryMore':'View Gallery',
     'about.heroTitle':'About GBM','about.heroSub':'Global BAM Movement — 세계 비즈니스 선교운동 연합회',
     'about.introTitle':'Who We Are',
-    'about.introDesc':'A global network integrating Business and Mission (BAM) — building self-sustaining Kingdom businesses in mission fields and connecting supporters, missionaries, and BAM entrepreneurs.',
+    'about.introDesc':'Together with 300 Gideon warriors, GBM plants 100 churches and fulfills a self-sustaining missional calling through Business as Mission (BAM).',
     'about.visionCardT':'Vision','about.visionCardD':'Opening a new path for world mission on a self-sustaining foundation: a BAM hub centered in Chiang Mai, 100 planted churches, and 300 Gideon partners.',
     'about.missionCardT':'Mission','about.missionCardD':'Through Business as Mission, we build self-sustaining Kingdom businesses in mission fields and connect supporters, missionaries, and BAM entrepreneurs.',
     'about.valuesCardT':'Core Values','about.valuesCardD':'One calling, self-sustainability, and unity — transcending denominations, we respect and care for one another to HARMONIZE.',
@@ -1597,7 +1697,7 @@ const I18N = {
     'dn.m1t':'Regular / One-time Giving','dn.m1d':'Give monthly, or make a one-time gift anytime.',
     'dn.m2t':'Bank Transfer','dn.m2d':'Bank account TBD / 계좌번호 추후 업데이트',
     'dn.m3t':'Donation Inquiries','dn.m3d':'For donation inquiries, contact us by phone or email.',
-    'dn.useTitle':'How Your Gift Is Used','dn.useDesc':'All finances are managed transparently. [Detailed financial reports TBD]',
+    'dn.useTitle':'How Your Gift Is Used','dn.useDesc':'All finances are managed transparently and reported regularly. [Detailed financial reports TBD]',
     'dn.use1':'Launching Kingdom businesses in mission fields (cafés, vocational training, startups)',
     'dn.use2':'BAM Academy — missionary training and sending',
     'dn.use3':'Local community-based church planting and discipleship',
@@ -1608,7 +1708,30 @@ const I18N = {
     'ft.name':'Global BAM Movement',
     'ft.desc':'A global network integrating business and mission — building self-sustaining Kingdom businesses in mission fields and connecting supporters, missionaries, and BAM entrepreneurs.',
     'ft.contactTitle':'Contact','ft.rep':'Representative · Lee Jung-hwan','ft.hq':'🌏 HQ · Chiang Mai, Thailand','ft.kr':'🇰🇷 Korea Base · Seolleung, Gangnam, Seoul',
-    'ft.snsTitle':'SNS'
+    'ft.snsTitle':'SNS',
+    'pv.slogan':'“Through Business as Mission,<br>we transform the world with the gospel and serve the nations with love.”',
+    'pv.sloganSub':'비즈니스 선교를 통하여 복음으로 세상을 변화시키고, 사랑으로 열방을 섬긴다.',
+    'pv.missionT':'Mission',
+    'pv.m1':'Gospel evangelism and raising local disciples','pv.m2':'Supporting overseas missionaries and planting churches','pv.m3':'Building pipelines through business',
+    'pv.m4':'Serving and loving through workplace mission','pv.m5':'Raising next-generation mission leaders','pv.m6':'A cooperation network among churches and mission organizations',
+    'pv.valuesT':'Core Values',
+    'pv.v1':'Bible-centered','pv.v2':'Prayer-centered','pv.v3':'Worship-centered','pv.v4':'Love and service','pv.v5':'Missional cooperation','pv.v6':'Integrity and responsibility',
+    'pv.planTitle':'Annual Plan',
+    'pv.q1':'Vision proclamation & mission training','pv.q2':'Domestic evangelism & community service','pv.q3':'Overseas short-term missions','pv.q4':'Mission report & next-year planning',
+    'pv.effectTitle':'Expected Impact',
+    'pv.e1':'Establishing Business as Mission','pv.e2':'Revitalizing home & overseas missions','pv.e3':'Producing next-generation mission leaders','pv.e4':'Strengthening church–mission cooperation',
+    'org2.president':'President','org2.vice':'Vice President','org2.sec':'Secretary General','org2.audit':'Auditor',
+    'org2.finance':'Finance Dept','org2.financeD':'Transparent finance management and stewardship',
+    'org2.mission':'Mission Dept','org2.missionD':'Overseeing home & overseas mission and church planting',
+    'org2.media':'PR & Media Dept','org2.mediaD':'Gospel outreach and PR through media',
+    'org2.prayer':'Prayer Support Dept','org2.prayerD':'Intercession and spiritual support',
+    'min.bizTitle':'Main Programs',
+    'min.b1':'Domestic church planting & evangelism','min.b2':'Overseas short- & long-term missions','min.b3':'Missionary support & care',
+    'min.b4':'Youth & young-adult mission training','min.b5':'Mission seminars & conferences','min.b6':'Relief & community service',
+    'min.b7':'Gospel outreach through media','min.b8':'Building mission communities through Global Education',
+    'min.b9':'Serving mission fields through Global BAM','min.b10':'Raising global leaders in every field',
+    'dn.fundLabel':'GBM is funded by',
+    'dn.fund1':'Membership dues','dn.fund2':'Donations & designated offerings','dn.fund3':'Event & mission support'
   }
 };
 
