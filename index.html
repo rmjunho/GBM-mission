@@ -1485,7 +1485,7 @@ const I18N = {
     'home.newsTitle':'최근 소식','home.newsMore':'공지·소식 전체 보기',
     'home.photosTitle':'GBM 창립총회',
     'home.photosDesc':'2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회가 첫걸음을 내디뎠습니다.',
-    'home.photoCap1':'창립총회 현장','home.photoCap2':'창립총회 단체 사진','home.galleryMore':'갤러리 더 보기',
+    'home.galleryMore':'갤러리 더 보기',
     'about.heroTitle':'소개·인사말','about.heroSub':'세계 비즈니스 선교운동 연합회 — Global BAM Movement',
     'about.introTitle':'GBM은 이런 공동체입니다',
     'about.introDesc':'GBM 선교회는 300명의 기드온 용사와 함께 100개 교회를 개척하고, 비즈니스 선교(BAM)를 통하여 자립형 선교적 사명을 감당하는 공동체입니다.',
@@ -1622,7 +1622,7 @@ const I18N = {
     'home.newsTitle':'Latest News','home.newsMore':'View All News',
     'home.photosTitle':'GBM Inaugural Assembly',
     'home.photosDesc':'On July 24, 2025, the Global BAM Movement took its first step at the Teheran Office Building in Seoul.',
-    'home.photoCap1':'Inaugural assembly','home.photoCap2':'Group photo','home.galleryMore':'View Gallery',
+    'home.galleryMore':'View Gallery',
     'about.heroTitle':'About GBM','about.heroSub':'Global BAM Movement — 세계 비즈니스 선교운동 연합회',
     'about.introTitle':'Who We Are',
     'about.introDesc':'Together with 300 Gideon warriors, GBM plants 100 churches and fulfills a self-sustaining missional calling through Business as Mission (BAM).',
@@ -1766,12 +1766,20 @@ const NEWS = [
 const NEWS_BADGE = { notice:'news.tabNotice', news:'news.tabNews', event:'news.tabEvent' };
 
 const GALLERY = [
-  { src:'images/photo1.jpg', cat:'inaugural', cap:{ko:'창립총회 현수막', en:'Inaugural assembly banner'} },
-  { src:'images/photo2.jpg', cat:'inaugural', cap:{ko:'창립총회 단체 사진', en:'Inaugural assembly group photo'} },
-  { src:'images/photo3.jpg', cat:'inaugural', cap:{ko:'창립총회 세미나 현장', en:'Seminar session at the inaugural assembly'} },
-  { src:'images/photo4.png', cat:'inaugural', cap:{ko:'대표 인사말', en:'Representative’s address'} },
-  { src:'images/photo5.jpg', cat:'inaugural', cap:{ko:'모임 및 세미나', en:'Meeting and seminar'} }
+  { src:'images/photo1.jpg', cat:'inaugural' },
+  { src:'images/photo2.jpg', cat:'inaugural' },
+  { src:'images/photo3.jpg', cat:'inaugural' },
+  { src:'images/photo4.png', cat:'inaugural' },
+  { src:'images/photo5.jpg', cat:'inaugural' },
+  { src:'images/worship1.jpg', cat:'worship' },
+  { src:'images/worship2.jpg', cat:'worship' },
+  { src:'images/worship3.jpg', cat:'worship' },
+  { src:'images/worship4.jpg', cat:'worship' },
+  { src:'images/worship5.jpg', cat:'worship' }
 ];
+/* 사진 제목 없음 — 대체텍스트는 "카테고리 + 순번"으로 자동 생성 (예: 창립총회 1) */
+const GAL_CAT = { inaugural:'gal.tabInaugural', ministry:'gal.tabMinistry', worship:'gal.tabWorship', event:'gal.tabEvent' };
+const galAlt = g => I18N[cur][GAL_CAT[g.cat]] + ' ' + (GALLERY.filter(x => x.cat === g.cat).indexOf(g) + 1);
 
 /* ---------- 03. Language toggle ---------- */
 let cur = localStorage.getItem('gbm-lang') || 'ko';   // default: Korean
@@ -1893,7 +1901,7 @@ function renderGallery(){
   curGalItems = GALLERY.filter(g => galCat === 'all' || g.cat === galCat);
   galleryGrid.innerHTML = curGalItems.length
     ? curGalItems.map((g,i)=>`<button class="gallery-item" type="button" data-i="${i}">
-        <img src="${g.src}" alt="${g.cap[cur]}" loading="lazy">
+        <img src="${g.src}" alt="${galAlt(g)}" loading="lazy">
       </button>`).join('')
     : `<p class="news-empty" style="grid-column:1/-1">${I18N[cur]['gal.empty']}</p>`;
 }
@@ -1922,7 +1930,7 @@ function openLB(list, i){
 function updateLB(){
   const g = lbList[lbIdx];
   lbImg.src = g.src;
-  lbImg.alt = g.cap[cur];
+  lbImg.alt = galAlt(g);
   lbCount.textContent = (lbIdx + 1) + ' / ' + lbList.length;
 }
 function closeLB(){
