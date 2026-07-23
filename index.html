@@ -1775,7 +1775,9 @@ const GALLERY = [
   { src:'images/worship2.jpg', cat:'worship' },
   { src:'images/worship3.jpg', cat:'worship' },
   { src:'images/worship4.jpg', cat:'worship' },
-  { src:'images/worship5.jpg', cat:'worship' }
+  { src:'images/worship5.jpg', cat:'worship' },
+  /* 행사 사진 event1.jpg ~ event48.jpg */
+  ...Array.from({length:48}, (_, i) => ({ src:'images/event' + (i+1) + '.jpg', cat:'event' }))
 ];
 /* 사진 제목 없음 — 대체텍스트는 "카테고리 + 순번"으로 자동 생성 (예: 창립총회 1) */
 const GAL_CAT = { inaugural:'gal.tabInaugural', ministry:'gal.tabMinistry', worship:'gal.tabWorship', event:'gal.tabEvent' };
