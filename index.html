@@ -1922,8 +1922,9 @@ function renderHomeFeatured(){
   if(!homeFeatured) return;
   const items = featuredItems();
   homeFeaturedTitle.textContent = I18N[cur][GAL_CAT[FEATURED_CAT]] || '';
+  /* .reveal 금지: JS로 나중에 주입되는 요소는 IntersectionObserver가 못 잡아 opacity:0로 남는다 */
   homeFeatured.innerHTML = items.slice(0, 2).map((g, i) =>
-    `<button class="gallery-item reveal${i ? ' reveal-d1' : ''}" type="button" data-hi="${i}">
+    `<button class="gallery-item" type="button" data-hi="${i}">
        <img src="${g.src}" alt="${galAlt(g)}" loading="lazy">
      </button>`).join('');
 }
