@@ -737,22 +737,15 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
     </div>
   </section>
 
-  <!-- inaugural assembly photos -->
+  <!-- featured album (홈 대표 앨범 — 최신 앨범 자동 표시, JS 렌더) -->
   <section class="section section-tint-blue">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">2025. 7. 24</span>
-        <h2 data-i18n="home.photosTitle">GBM 창립총회</h2>
-        <p data-i18n="home.photosDesc">2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회가 첫걸음을 내디뎠습니다.</p>
+        <span class="eyebrow">Gallery</span>
+        <h2 id="homeFeaturedTitle"><!-- JS: 대표 앨범 제목 --></h2>
+        <p data-i18n="home.featuredDesc">GBM의 가장 최근 현장을 사진으로 만나 보세요.</p>
       </div>
-      <div class="grid grid-2">
-        <button class="gallery-item reveal" data-lb="0" type="button">
-          <img src="images/photo1.jpg" alt="GBM 창립총회 현수막" loading="lazy">
-        </button>
-        <button class="gallery-item reveal reveal-d1" data-lb="1" type="button">
-          <img src="images/photo2.jpg" alt="GBM 창립총회 단체 사진" loading="lazy">
-        </button>
-      </div>
+      <div class="grid grid-2" id="homeFeatured"><!-- JS: 대표 앨범 사진 2장 --></div>
       <p class="center mt-2 reveal"><a class="btn btn-outline btn-sm" href="#gallery" data-i18n="home.galleryMore">갤러리 더 보기</a></p>
     </div>
   </section>
@@ -1484,8 +1477,7 @@ const I18N = {
     'home.min5t':'후원 캠페인 운영','home.min5d':'Support Campaigns',
     'home.minMore':'사역 안내 자세히 보기',
     'home.newsTitle':'최근 소식','home.newsMore':'공지·소식 전체 보기',
-    'home.photosTitle':'GBM 창립총회',
-    'home.photosDesc':'2025년 7월 24일, 서울 테헤란 오피스빌딩에서 GBM 선교운동 연합회가 첫걸음을 내디뎠습니다.',
+    'home.featuredDesc':'GBM의 가장 최근 현장을 사진으로 만나 보세요.',
     'home.galleryMore':'갤러리 더 보기',
     'about.heroTitle':'소개·인사말','about.heroSub':'세계 비즈니스 선교운동 연합회 — Global BAM Movement',
     'about.introTitle':'GBM은 이런 공동체입니다',
@@ -1621,8 +1613,7 @@ const I18N = {
     'home.min5t':'Support Campaigns','home.min5d':'후원 캠페인 운영',
     'home.minMore':'Explore Our Ministries',
     'home.newsTitle':'Latest News','home.newsMore':'View All News',
-    'home.photosTitle':'GBM Inaugural Assembly',
-    'home.photosDesc':'On July 24, 2025, the Global BAM Movement took its first step at the Teheran Office Building in Seoul.',
+    'home.featuredDesc':'See GBM’s latest moments in photos.',
     'home.galleryMore':'View Gallery',
     'about.heroTitle':'About GBM','about.heroSub':'Global BAM Movement — 세계 비즈니스 선교운동 연합회',
     'about.introTitle':'Who We Are',
@@ -1804,7 +1795,7 @@ function applyLang(lang){
     if(v !== undefined) el.placeholder = v;
   });
   langBtn.textContent = lang === 'ko' ? '🇺🇸 English' : '🇰🇷 한국어';
-  renderNews(); renderHomeNews(); renderGallery(); setTitle();
+  renderNews(); renderHomeNews(); renderHomeFeatured(); renderGallery(); setTitle();
 }
 langBtn.addEventListener('click', ()=> applyLang(cur === 'ko' ? 'en' : 'ko'));
 
@@ -1921,10 +1912,26 @@ galleryGrid.addEventListener('click', e=>{
   const b = e.target.closest('.gallery-item');
   if(b) openLB(curGalItems, +b.dataset.i);
 });
-/* home inaugural photos also open the lightbox */
-document.querySelectorAll('[data-lb]').forEach(b =>
-  b.addEventListener('click', ()=> openLB(GALLERY, +b.dataset.lb))
-);
+/* home featured album — 대표 앨범 카테고리만 지정하면 제목·사진·라이트박스가 자동으로 따라감.
+   새 앨범을 올릴 때 이 값만 최신 카테고리로 바꾸면 홈 대표 섹션이 자동으로 바뀐다. */
+const FEATURED_CAT = 'healingcamp';
+const homeFeatured = document.getElementById('homeFeatured');
+const homeFeaturedTitle = document.getElementById('homeFeaturedTitle');
+function featuredItems(){ return GALLERY.filter(g => g.cat === FEATURED_CAT); }
+function renderHomeFeatured(){
+  if(!homeFeatured) return;
+  const items = featuredItems();
+  homeFeaturedTitle.textContent = I18N[cur][GAL_CAT[FEATURED_CAT]] || '';
+  homeFeatured.innerHTML = items.slice(0, 2).map((g, i) =>
+    `<button class="gallery-item reveal${i ? ' reveal-d1' : ''}" type="button" data-hi="${i}">
+       <img src="${g.src}" alt="${galAlt(g)}" loading="lazy">
+     </button>`).join('');
+}
+/* 홈 대표 사진 클릭 → 대표 앨범 전체를 라이트박스로 */
+homeFeatured && homeFeatured.addEventListener('click', e=>{
+  const b = e.target.closest('.gallery-item');
+  if(b) openLB(featuredItems(), +b.dataset.hi);
+});
 
 function openLB(list, i){
   lbList = list; lbIdx = i;
