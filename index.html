@@ -523,6 +523,24 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
   display:inline-block;background:var(--gold-soft);color:var(--gold-deep);border:1px dashed var(--gold-deep);
   font-size:.8rem;font-weight:700;padding:.2rem .7rem;border-radius:8px;
 }
+/* CMS 정기후원 CTA */
+.cms-cta{
+  max-width:760px;margin:2.2rem auto 0;text-align:center;
+  background:var(--surface);border:1.5px solid var(--gold-deep);
+  border-radius:calc(var(--radius) + 4px);
+  padding:clamp(1.8rem,4vw,2.6rem);box-shadow:var(--shadow);
+}
+.cms-cta h3{font-size:clamp(1.15rem,2.6vw,1.45rem);margin-bottom:.75rem}
+.cms-cta p{color:var(--muted);font-size:.95rem}
+.cms-amounts{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:1.3rem 0 1.5rem}
+.cms-amounts span{
+  background:var(--gold-soft);color:var(--gold-deep);border-radius:999px;
+  padding:.55rem 1.15rem;font-size:.9rem;font-weight:700;
+}
+.cms-note{
+  margin-top:1.2rem;font-size:.82rem;line-height:1.65;color:var(--muted);
+  border-top:1px dashed var(--line);padding-top:1rem;
+}
 
 /* ---------- 17. Footer ---------- */
 .site-footer{background:#33302A;color:#CFC8B8;margin-top:0}
@@ -1318,6 +1336,18 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
         <blockquote data-i18n="dn.gideonQuote">“300명의 기드온 용사와 함께 경제적 자유를 얻어<br>마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다”</blockquote>
         <p class="quote-sub" data-i18n="dn.gideonSub">Building a system where 300 Gideon warriors achieve economic freedom to fully devote to mission</p>
       </div>
+
+      <!-- CMS 정기후원 CTA -->
+      <div class="cms-cta reveal">
+        <h3 data-i18n="dn.cmsTitle">CMS 정기후원 신청</h3>
+        <p data-i18n="dn.cmsDesc">아래 버튼을 누르시면 CMS 자동이체 신청 페이지로 연결됩니다. 보내주시는 후원금은 선교사님들을 후원하고 전 세계 100개 교회를 개척하는 데 귀하게 사용됩니다.</p>
+        <p class="cms-amounts">
+          <span data-i18n="dn.cmsAmt1">일반회원 · 매월 1만원</span>
+          <span data-i18n="dn.cmsAmt2">기드온 용사 · 매월 3만원</span>
+        </p>
+        <a class="btn btn-gold" href="https://my.bankcms.co.kr/BG4pFB" target="_blank" rel="noopener" data-i18n="dn.cmsBtn">후원하기</a>
+        <p class="cms-note" data-i18n="dn.cmsNote">※ GBM 선교회 CMS 계좌는 IM 선교회에서 진행 중인 계좌를 인계받아 당분간 활용하고 있습니다. 신청 페이지에 「대한예수교장로회 백석대신 아이엠교회」로 표시되니 참고해 주세요.</p>
+      </div>
     </div>
   </section>
 
@@ -1334,8 +1364,9 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
           <p data-i18n="dn.m1d">매월 정기적으로, 또는 원하실 때 일시적으로 후원하실 수 있습니다.</p>
         </div>
         <div class="card donate-method reveal reveal-d1">
-          <h3>🏦 <span data-i18n="dn.m2t">계좌 이체</span></h3>
-          <p><span class="tbd" data-i18n="dn.m2d">계좌번호 추후 업데이트 / Bank account TBD</span></p>
+          <h3>🏦 <span data-i18n="dn.m2t">CMS 자동이체</span></h3>
+          <p data-i18n="dn.m2d">매월 자동이체로 간편하게 정기후원하실 수 있습니다.</p>
+          <p style="margin-top:.8rem"><a class="btn btn-gold btn-sm" href="https://my.bankcms.co.kr/BG4pFB" target="_blank" rel="noopener" data-i18n="dn.m2btn">CMS 신청하기</a></p>
         </div>
         <div class="card donate-method reveal reveal-d2">
           <h3>📞 <span data-i18n="dn.m3t">후원 문의</span></h3>
@@ -1374,7 +1405,10 @@ body.drawer-open .drawer-backdrop{opacity:1;pointer-events:auto}
         <blockquote data-i18n="dn.closing">비즈니스를 통한 선교. 하나의 부르심. 전 세계적 영향력.<br>여러분과 함께 그 길을 걸어가겠습니다.</blockquote>
         <p class="quote-sub" data-i18n="dn.closingVerse">“너희로 믿고 그 이름을 힘입어 생명을 얻게 하려 함이니라” (요한복음 20:31)</p>
       </div>
-      <p class="center mt-2 reveal"><a href="#contact" class="btn btn-gold" data-i18n="dn.cta">후원 문의하기</a></p>
+      <p class="center mt-2 reveal" style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+        <a href="https://my.bankcms.co.kr/BG4pFB" target="_blank" rel="noopener" class="btn btn-gold" data-i18n="dn.cmsBtn">후원하기</a>
+        <a href="#contact" class="btn btn-outline" data-i18n="dn.cta">후원 문의하기</a>
+      </p>
     </div>
   </section>
 </section>
@@ -1552,7 +1586,11 @@ const I18N = {
     'dn.gideonSub':'Building a system where 300 Gideon warriors achieve economic freedom to fully devote to mission',
     'dn.methodTitle':'후원 방법',
     'dn.m1t':'정기후원 / 일시후원','dn.m1d':'매월 정기적으로, 또는 원하실 때 일시적으로 후원하실 수 있습니다.',
-    'dn.m2t':'계좌 이체','dn.m2d':'계좌번호 추후 업데이트 / Bank account TBD',
+    'dn.m2t':'CMS 자동이체','dn.m2d':'매월 자동이체로 간편하게 정기후원하실 수 있습니다.','dn.m2btn':'CMS 신청하기',
+    'dn.cmsTitle':'CMS 정기후원 신청',
+    'dn.cmsDesc':'아래 버튼을 누르시면 CMS 자동이체 신청 페이지로 연결됩니다. 보내주시는 후원금은 선교사님들을 후원하고 전 세계 100개 교회를 개척하는 데 귀하게 사용됩니다.',
+    'dn.cmsAmt1':'일반회원 · 매월 1만원','dn.cmsAmt2':'기드온 용사 · 매월 3만원','dn.cmsBtn':'후원하기',
+    'dn.cmsNote':'※ GBM 선교회 CMS 계좌는 IM 선교회에서 진행 중인 계좌를 인계받아 당분간 활용하고 있습니다. 신청 페이지에 「대한예수교장로회 백석대신 아이엠교회」로 표시되니 참고해 주세요.',
     'dn.m3t':'후원 문의','dn.m3d':'후원 관련 문의는 전화 또는 이메일로 연락해 주세요.',
     'dn.useTitle':'후원금은 이렇게 사용됩니다','dn.useDesc':'모든 재정은 투명하게 관리하며 정기적으로 보고합니다. [상세 재정 보고 추후 업데이트 / TBD]',
     'dn.use1':'선교지 킹덤 비즈니스 런칭 지원 (카페, 직업교육, 스타트업)',
@@ -1688,7 +1726,11 @@ const I18N = {
     'dn.gideonSub':'300명의 기드온 용사와 함께 경제적 자유를 얻어 마음껏 선교를 할 수 있도록 시스템을 만들어 갑니다',
     'dn.methodTitle':'How to Give',
     'dn.m1t':'Regular / One-time Giving','dn.m1d':'Give monthly, or make a one-time gift anytime.',
-    'dn.m2t':'Bank Transfer','dn.m2d':'Bank account TBD / 계좌번호 추후 업데이트',
+    'dn.m2t':'CMS Auto-Transfer','dn.m2d':'Set up a simple monthly automatic transfer.','dn.m2btn':'Sign Up for CMS',
+    'dn.cmsTitle':'Monthly Giving (CMS)',
+    'dn.cmsDesc':'The button below opens the CMS auto-transfer signup page. Your giving supports our missionaries and helps plant 100 churches around the world.',
+    'dn.cmsAmt1':'General member · ₩10,000 / month','dn.cmsAmt2':'Gideon warrior · ₩30,000 / month','dn.cmsBtn':'Give Now',
+    'dn.cmsNote':'※ GBM’s CMS account is currently operated through an account handed over from IM Mission, so the signup page appears under “Baekseok Daeshin IM Church (Presbyterian Church of Korea)”.',
     'dn.m3t':'Donation Inquiries','dn.m3d':'For donation inquiries, contact us by phone or email.',
     'dn.useTitle':'How Your Gift Is Used','dn.useDesc':'All finances are managed transparently and reported regularly. [Detailed financial reports TBD]',
     'dn.use1':'Launching Kingdom businesses in mission fields (cafés, vocational training, startups)',
