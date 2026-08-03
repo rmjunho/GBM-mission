@@ -1911,7 +1911,7 @@ galleryGrid.addEventListener('click', e=>{
 });
 /* home featured album — 대표 앨범 카테고리만 지정하면 제목·사진·라이트박스가 자동으로 따라감.
    새 앨범을 올릴 때 이 값만 최신 카테고리로 바꾸면 홈 대표 섹션이 자동으로 바뀐다. */
-const FEATURED_CAT = 'healingcamp';
+const FEATURED_CAT = 'worship';
 const homeFeatured = document.getElementById('homeFeatured');
 const homeFeaturedTitle = document.getElementById('homeFeaturedTitle');
 function featuredItems(){ return GALLERY.filter(g => g.cat === FEATURED_CAT); }
@@ -1919,9 +1919,12 @@ function renderHomeFeatured(){
   if(!homeFeatured) return;
   const items = featuredItems();
   homeFeaturedTitle.textContent = I18N[cur][GAL_CAT[FEATURED_CAT]] || '';
-  /* .reveal 금지: JS로 나중에 주입되는 요소는 IntersectionObserver가 못 잡아 opacity:0로 남는다 */
-  homeFeatured.innerHTML = items.slice(0, 2).map((g, i) =>
-    `<button class="gallery-item" type="button" data-hi="${i}">
+  /* 최신 2장(배열 뒤쪽)을 대표로 표시. data-hi = 앨범 전체에서의 실제 인덱스(라이트박스 정확도).
+     .reveal 금지: JS로 나중에 주입되는 요소는 IntersectionObserver가 못 잡아 opacity:0로 남는다 */
+  const shown = items.slice(-2);
+  const startIdx = items.length - shown.length;
+  homeFeatured.innerHTML = shown.map((g, i) =>
+    `<button class="gallery-item" type="button" data-hi="${startIdx + i}">
        <img src="${g.src}" alt="${galAlt(g)}" loading="lazy">
      </button>`).join('');
 }
