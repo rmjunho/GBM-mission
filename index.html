@@ -1932,8 +1932,12 @@ const lightbox = document.getElementById('lightbox');
 const lbImg = document.getElementById('lbImg');
 const lbCount = document.getElementById('lbCount');
 
+/* 카테고리 안에서 최신 사진(나중에 추가된 뒷번호)이 위로 오도록 뒤집는다.
+   '전체'에서도 카테고리 묶음 순서는 유지. GALLERY 원본은 건드리지 않음(홈 대표 섹션이 원본 순서를 사용). */
+const galleryOrder = list =>
+  [...new Set(list.map(g => g.cat))].flatMap(c => list.filter(g => g.cat === c).reverse());
 function renderGallery(){
-  curGalItems = GALLERY.filter(g => galCat === 'all' || g.cat === galCat);
+  curGalItems = galleryOrder(GALLERY.filter(g => galCat === 'all' || g.cat === galCat));
   galleryGrid.innerHTML = curGalItems.length
     ? curGalItems.map((g,i)=>`<button class="gallery-item" type="button" data-i="${i}">
         <img src="${g.src}" alt="${galAlt(g)}" loading="lazy">
